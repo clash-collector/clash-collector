@@ -21,10 +21,6 @@ export const getTokenMetadata = (tokenMint: anchor.web3.PublicKey) => {
 };
 
 export const spendableActionPoints = (participant: ParticipantAccount, battleground: BattlegroundAccount) => {
-  console.log(
-    `next point in ${Date.now() / 1000 - battleground.startTime.toNumber()}`,
-    ((Date.now() / 1000 - battleground.startTime.toNumber()) / 86400) * battleground.actionPointsPerDay
-  );
   return Math.floor(
     ((Date.now() / 1000 - battleground.startTime.toNumber()) / 86400) * battleground.actionPointsPerDay -
       participant.actionPointsSpent

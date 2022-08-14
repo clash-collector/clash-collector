@@ -15,6 +15,7 @@ import {
 import { getTokenMetadata } from "../utils";
 import useBattleRoyale from "./useBattleRoyale";
 import useProvider from "./useProvider";
+import useUserNfts from "./useUserNfts";
 
 export declare type BaseBattlegroundAccount = IdlAccounts<BattleRoyaleProgram>["battlegroundState"];
 export interface BattlegroundAccount extends BaseBattlegroundAccount {
@@ -39,6 +40,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
       return new Program<BattleRoyaleProgram>(BattleRoyaleIdl, BATTLE_ROYALE_PROGRAM_ID, provider);
     }
   }, [provider]);
+  const { fetchUserParticipants } = useUserNfts();
   const { gameMaster, battleRoyale } = useBattleRoyale();
   const [battleground, setBattleground] = useState<BattlegroundAccount>();
   const [participants, setParticipants] = useState<ParticipantAccount[]>();
@@ -163,9 +165,10 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
             playerAccount,
             playerNftTokenAccount,
           })
-          .rpc();
+          .rpc({ commitment: "confirmed" });
         await program.provider.connection.confirmTransaction(tx);
         await fetchState();
+        await fetchUserParticipants();
         if (callbacks.onSuccess) callbacks.onSuccess();
       } catch (e) {
         if (callbacks.onError) callbacks.onError(e);
@@ -191,7 +194,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
             battleground: battlegroundAddress,
             clock: SYSVAR_CLOCK_PUBKEY,
           })
-          .rpc();
+          .rpc({ commitment: "confirmed" });
         await program.provider.connection.confirmTransaction(tx);
         await fetchState();
         callbacks?.onSuccess && callbacks.onSuccess();
@@ -241,7 +244,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
             winnerAccount,
             winnerNftTokenAccount,
           })
-          .rpc({ skipPreflight: true });
+          .rpc({ commitment: "confirmed" });
         await program.provider.connection.confirmTransaction(tx);
         await fetchState();
         callbacks?.onSuccess && callbacks.onSuccess();

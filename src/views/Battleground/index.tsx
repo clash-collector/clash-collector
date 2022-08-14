@@ -16,13 +16,24 @@ export default function Battleground() {
   const { battleground, startBattle, joinBattleground, finishBattle } = useBattleground({ id: Number(battlegroundId) });
   const parentCollection = collections.find((e) => deepEqual(e.info, battleground?.collectionInfo));
   const { tokens, userParticipants } = useUserNfts();
+  const [isConfirming, setIsConfirming] = useState(false);
 
   const battlegroundUserParticipants = useMemo(() => {
     return userParticipants?.filter((e) => battleground && e.battleground.equals(battleground.publicKey));
   }, [battleground, userParticipants]);
 
   const handleStartBattle = async () => {
-    await startBattle();
+    setIsConfirming(true);
+    await startBattle({
+      onSuccess: () => {
+        toast.success(`Restarted the battleground!`);
+      },
+      onError: (error) => {
+        console.log(error, Object.entries(error));
+        toast.error(error?.errorLogs || String(error));
+      },
+    });
+    setIsConfirming(false);
   };
 
   const handleFinishBattle = async () => {
@@ -71,21 +82,30 @@ export default function Battleground() {
             <div className="stat-desc">See on Solana.fm</div>
           </div>
         </div>
-        {battleground &&
-          battleground.status["preparing"] &&
-          battleground.participants === battleground.participantsCap && (
-            <div className="btn btn-accent mt-5" onClick={() => handleStartBattle()}>
-              Start the battle
-            </div>
-          )}
-        {battleground && battleground.status["ongoing"] && battleground.participants === 1 ? (
-          <button className="btn btn-success w-full mt-5" onClick={() => handleFinishBattle()}>
-            Send prize and restart battleground
-          </button>
-        ) : (
-          <div className="animate-bounce mt-5">
-            <span className=" text-2xl font bold">The battle has begun!</span>
-          </div>
+        {battleground && (
+          <>
+            {battleground.status["preparing"] && battleground.participants === battleground.participantsCap && (
+              <div
+                className={`btn btn-accent mt-5 ${isConfirming ? "loading" : ""}`}
+                onClick={() => handleStartBattle()}
+              >
+                Start the battle
+              </div>
+            )}
+            {battleground.status["ongoing"] &&
+              (battleground.participants === 1 ? (
+                <button
+                  className={`btn btn-success w-full mt-5 ${isConfirming ? "loading" : ""}`}
+                  onClick={() => handleFinishBattle()}
+                >
+                  Send prize and restart battleground
+                </button>
+              ) : (
+                <div className="animate-bounce mt-5">
+                  <span className=" text-2xl font bold">The battle has begun!</span>
+                </div>
+              ))}
+          </>
         )}
       </div>
       <div className="mt-10">

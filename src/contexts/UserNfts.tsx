@@ -18,9 +18,11 @@ export interface NftAccount {
 interface UserNftsContextProps {
   tokens?: NftAccount[];
   userParticipants?: ParticipantAccount[];
+  fetchUserParticipants: () => Promise<void>;
 }
 export const UserNftsContext = React.createContext<UserNftsContextProps>({
   tokens: [],
+  fetchUserParticipants: () => new Promise(() => {}),
 });
 
 export const UserNftsProvider = ({ children }: { children: React.ReactNode }) => {
@@ -70,14 +72,9 @@ export const UserNftsProvider = ({ children }: { children: React.ReactNode }) =>
     }
   }, [tokens, userParticipants]);
 
-  // useEffect(() => {
-  //   let interval = setInterval(() => {
-  //     fetchNfts();
-  //     fetchUserParticipants();
-  //   }, 15000);
-
-  //   return () => clearInterval(interval);
-  // });
-
-  return <UserNftsContext.Provider value={{ tokens, userParticipants }}>{children}</UserNftsContext.Provider>;
+  return (
+    <UserNftsContext.Provider value={{ tokens, userParticipants, fetchUserParticipants }}>
+      {children}
+    </UserNftsContext.Provider>
+  );
 };

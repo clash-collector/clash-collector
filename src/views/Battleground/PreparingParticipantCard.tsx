@@ -70,10 +70,7 @@ export default function PreparingParticipantCard({
                   <span>Attack</span>
                 </div>
               </div>
-              <button
-                className={`btn btn-primary ${isInflight ? "btn-loading" : ""}`}
-                onClick={() => handleSendToBattle()}
-              >
+              <button className={`btn btn-primary ${isInflight ? "loading" : ""}`} onClick={() => handleSendToBattle()}>
                 Confirm
               </button>
             </div>

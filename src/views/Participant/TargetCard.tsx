@@ -24,6 +24,7 @@ export default function TargetCard({
   const { tokens } = useUserNfts();
   const [pointsToSpend, setPointsToSpend] = useState<number>(0);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isConfirming, setIsConfirming] = useState<boolean>(false);
   const [attack, setAttack] = useState<boolean>(false);
 
   const pointsLeft = spendableActionPoints(source, battleground);
@@ -31,6 +32,7 @@ export default function TargetCard({
   console.log(attack ? { attack } : { heal: true }, target, pointsToSpend, "points to spend");
 
   const handleConfirmAction = async () => {
+    setIsConfirming(true);
     await action(attack ? { attack } : { heal: true }, target, pointsToSpend, {
       onSuccess: () => {
         toast.success(`Successfull ${attack ? "attack" : "healing"}`);
@@ -41,6 +43,7 @@ export default function TargetCard({
       },
     });
     setIsOpen(false);
+    setIsConfirming(false);
   };
 
   return (
@@ -115,7 +118,7 @@ export default function TargetCard({
             You will{" "}
             {attack ? `deal ${source.attack * pointsToSpend} damage` : `heal ${(source.defense * pointsToSpend) / 2}`}
           </p>
-          <button className="btn" onClick={() => handleConfirmAction()}>
+          <button className={`btn ${isConfirming ? "loading" : ""}`} onClick={() => handleConfirmAction()}>
             Confirm
           </button>
         </div>

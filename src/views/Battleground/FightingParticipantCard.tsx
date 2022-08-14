@@ -14,7 +14,7 @@ export default function FightingParticipantCard({
 
   useEffect(() => {
     let interval = setInterval(() => setPoints(spendableActionPoints(participant, battleground)), 1000);
-    return clearInterval(interval);
+    return () => clearInterval(interval);
   }, [participant, battleground]);
 
   return (
