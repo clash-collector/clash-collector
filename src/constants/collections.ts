@@ -22,13 +22,13 @@ export interface Collection {
   website?: string;
 }
 
-const testCollections: Collection[] = [
+export const testCollections: Collection[] = [
   {
     id: "sol-patrol",
     name: "Sol Patrol",
     info: {
       v2: {
-        collectionMint: new anchor.web3.PublicKey("DQfx2NATSngLV6HMQ1EAZjTDfbHgnEjQgDJnN93yeMJZ"),
+        collectionMint: new anchor.web3.PublicKey("o7njvS3rDVJMa1htv27mGf8ezFUuvAPUe5yaXyZms9d"),
       },
     },
     website: "https://www.solpatrol.io/",
@@ -36,7 +36,7 @@ const testCollections: Collection[] = [
   },
 ];
 
-const mainnetCollections: Collection[] = [
+export const mainnetCollections: Collection[] = [
   {
     id: "udder-chaos",
     name: "Udder Chaos",
@@ -68,5 +68,3 @@ const mainnetCollections: Collection[] = [
     profile: solPatrolProfile,
   },
 ];
-
-export const collections = testCollections;

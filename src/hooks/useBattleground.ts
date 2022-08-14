@@ -27,7 +27,12 @@ export interface ParticipantAccount extends BaseParticipantAccount {
   publicKey: PublicKey;
 }
 
-export default function useBattleground(id?: number) {
+export interface ProgramMethodCallbacks {
+  onError?: (error: any) => void;
+  onSuccess?: () => void;
+}
+
+export default function useBattleground({ id, publicKey }: { id?: number; publicKey?: PublicKey }) {
   const provider = useProvider();
   const program = useMemo(() => {
     if (provider) {
@@ -39,20 +44,26 @@ export default function useBattleground(id?: number) {
   const [participants, setParticipants] = useState<ParticipantAccount[]>();
 
   const fetchState = async () => {
-    if (typeof id !== "number" || !program) return;
+    if ((!publicKey && typeof id !== "number") || !program) return;
 
-    const [authorityAddress] = PublicKey.findProgramAddressSync(
-      [BATTLEGROUND_AUTHORITY_SEEDS, new anchor.BN(id).toArrayLike(Buffer, "le", 8)],
-      BATTLE_ROYALE_PROGRAM_ID
-    );
-    const [battlegroundAddress] = PublicKey.findProgramAddressSync(
-      [BATTLEGROUND_STATE_SEEDS, new anchor.BN(id).toArrayLike(Buffer, "le", 8)],
-      BATTLE_ROYALE_PROGRAM_ID
-    );
+    let authorityAddress: PublicKey;
+    let battlegroundAddress: PublicKey;
+    if (publicKey) {
+      battlegroundAddress = publicKey;
+    } else {
+      [battlegroundAddress] = PublicKey.findProgramAddressSync(
+        [BATTLEGROUND_STATE_SEEDS, new anchor.BN(id!).toArrayLike(Buffer, "le", 8)],
+        BATTLE_ROYALE_PROGRAM_ID
+      );
+    }
 
     const state = await program.account.battlegroundState.fetch(battlegroundAddress);
     const mint = await getMint(program.provider.connection, state.potMint);
     try {
+      [authorityAddress] = PublicKey.findProgramAddressSync(
+        [BATTLEGROUND_AUTHORITY_SEEDS, state.id.toArrayLike(Buffer, "le", 8)],
+        BATTLE_ROYALE_PROGRAM_ID
+      );
       const potAccount = await getAccount(
         program.provider.connection,
         await getAssociatedTokenAddress(state.potMint, authorityAddress, true)
@@ -84,24 +95,36 @@ export default function useBattleground(id?: number) {
   }, [battleground]);
 
   const fetchParticipants = async () => {
-    console.log(program, battleground);
     if (!program || !battleground) return;
 
     const accounts = await program.account.participantState.all([
       { memcmp: { offset: 9, bytes: battleground.publicKey.toString() } },
     ]);
-    console.log(accounts);
     setParticipants(accounts.map((e) => ({ ...e.account, publicKey: e.publicKey })) as any);
   };
 
   useEffect(() => {
-    if (!participants) {
+    fetchParticipants();
+  }, [battleground, id, publicKey]);
+
+  // Auto refresh data
+  useEffect(() => {
+    let interval = setInterval(() => {
+      fetchState();
       fetchParticipants();
-    }
-  }, [battleground, participants]);
+    }, 15000);
+
+    return () => clearInterval(interval);
+  });
 
   const joinBattleground = useCallback(
-    async (token: NftAccount, attack: number, defense: number, whitelistProof: number[][] | null = null) => {
+    async (
+      token: NftAccount,
+      attack: number,
+      defense: number,
+      whitelistProof: number[][] | null = null,
+      callbacks: ProgramMethodCallbacks = {}
+    ) => {
       if (!program || !provider || !battleground || !gameMaster) return;
 
       const [authorityAddress] = PublicKey.findProgramAddressSync(
@@ -122,49 +145,112 @@ export default function useBattleground(id?: number) {
       const playerNftTokenAccount = await getAssociatedTokenAddress(token.key, provider.publicKey, true);
       const tokenMetadata = getTokenMetadata(token.key);
 
-      const tx = await program.methods
-        .joinBattleground(attack, defense, whitelistProof)
-        .accounts({
-          signer: program.provider.publicKey,
-          gameMaster,
-          battleRoyale,
-          authority: authorityAddress,
-          battleground: battlegroundAddress,
-          participant: participantAddress,
-          potMint: battleground.potMint,
-          nftMint: token.key,
-          nftMetadata: tokenMetadata,
-          potAccount,
-          devAccount,
-          playerAccount,
-          playerNftTokenAccount,
-        })
-        .rpc();
-      await program.provider.connection.confirmTransaction(tx);
-      await fetchState();
+      try {
+        const tx = await program.methods
+          .joinBattleground(attack, defense, whitelistProof)
+          .accounts({
+            signer: program.provider.publicKey,
+            gameMaster,
+            battleRoyale,
+            authority: authorityAddress,
+            battleground: battlegroundAddress,
+            participant: participantAddress,
+            potMint: battleground.potMint,
+            nftMint: token.key,
+            nftMetadata: tokenMetadata,
+            potAccount,
+            devAccount,
+            playerAccount,
+            playerNftTokenAccount,
+          })
+          .rpc();
+        await program.provider.connection.confirmTransaction(tx);
+        await fetchState();
+        if (callbacks.onSuccess) callbacks.onSuccess();
+      } catch (e) {
+        if (callbacks.onError) callbacks.onError(e);
+      }
     },
     [program]
   );
 
-  const startBattle = useCallback(async () => {
-    if (!program || !provider || !battleground || !gameMaster) return;
+  const startBattle = useCallback(
+    async (callbacks: ProgramMethodCallbacks = {}) => {
+      if (!program || !provider || !battleground || !gameMaster) return;
 
-    const [battlegroundAddress] = PublicKey.findProgramAddressSync(
-      [BATTLEGROUND_STATE_SEEDS, new anchor.BN(battleground.id).toArrayLike(Buffer, "le", 8)],
-      BATTLE_ROYALE_PROGRAM_ID
-    );
+      const [battlegroundAddress] = PublicKey.findProgramAddressSync(
+        [BATTLEGROUND_STATE_SEEDS, new anchor.BN(battleground.id).toArrayLike(Buffer, "le", 8)],
+        BATTLE_ROYALE_PROGRAM_ID
+      );
 
-    const tx = await program.methods
-      .startBattle()
-      .accounts({
-        battleRoyale,
-        battleground: battlegroundAddress,
-        clock: SYSVAR_CLOCK_PUBKEY,
-      })
-      .rpc();
-    await program.provider.connection.confirmTransaction(tx);
-    await fetchState();
-  }, [program]);
+      try {
+        const tx = await program.methods
+          .startBattle()
+          .accounts({
+            battleRoyale,
+            battleground: battlegroundAddress,
+            clock: SYSVAR_CLOCK_PUBKEY,
+          })
+          .rpc();
+        await program.provider.connection.confirmTransaction(tx);
+        await fetchState();
+        callbacks?.onSuccess && callbacks.onSuccess();
+      } catch (e) {
+        callbacks?.onError && callbacks.onError(e);
+      }
+    },
+    [program]
+  );
 
-  return { battleground, participants, joinBattleground, startBattle };
+  const finishBattle = useCallback(
+    async (callbacks: ProgramMethodCallbacks = {}) => {
+      if (!program || !provider || !battleground || !gameMaster) return;
+
+      const winner = participants?.find((e) => e.alive);
+      if (!winner) return;
+
+      const [authorityAddress] = PublicKey.findProgramAddressSync(
+        [BATTLEGROUND_AUTHORITY_SEEDS, new anchor.BN(battleground.id).toArrayLike(Buffer, "le", 8)],
+        BATTLE_ROYALE_PROGRAM_ID
+      );
+      const [battlegroundAddress] = PublicKey.findProgramAddressSync(
+        [BATTLEGROUND_STATE_SEEDS, new anchor.BN(battleground.id).toArrayLike(Buffer, "le", 8)],
+        BATTLE_ROYALE_PROGRAM_ID
+      );
+      const [participantAddress] = PublicKey.findProgramAddressSync(
+        [PARTICIPANT_STATE_SEEDS, battlegroundAddress.toBuffer(), winner.nftMint.toBuffer()],
+        BATTLE_ROYALE_PROGRAM_ID
+      );
+
+      const potAccount = await getAssociatedTokenAddress(battleground.potMint, authorityAddress, true);
+      const winnerAccount = await getAssociatedTokenAddress(battleground.potMint, provider.publicKey, true);
+      const winnerNftTokenAccount = await getAssociatedTokenAddress(winner.nftMint, provider.publicKey, true);
+
+      try {
+        const tx = await program.methods
+          .finishBattle()
+          .accounts({
+            battleRoyale: battleRoyale,
+            battleground: battleground.publicKey,
+            authority: authorityAddress,
+            participant: participantAddress,
+            winner: provider.publicKey,
+            nftMint: winner.nftMint,
+            potMint: battleground.potMint,
+            potAccount,
+            winnerAccount,
+            winnerNftTokenAccount,
+          })
+          .rpc({ skipPreflight: true });
+        await program.provider.connection.confirmTransaction(tx);
+        await fetchState();
+        callbacks?.onSuccess && callbacks.onSuccess();
+      } catch (e) {
+        callbacks?.onError && callbacks.onError(e);
+      }
+    },
+    [program]
+  );
+
+  return { battleground, participants, joinBattleground, startBattle, finishBattle };
 }

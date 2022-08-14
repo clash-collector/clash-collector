@@ -1,5 +1,5 @@
 import { Dialog } from "@headlessui/react";
-import { RefreshIcon, PlusIcon } from "@heroicons/react/outline";
+import { RefreshIcon, PlusIcon, ArrowLeftIcon } from "@heroicons/react/outline";
 import { getMint } from "@solana/spl-token";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
@@ -35,7 +35,6 @@ export default function Collection() {
   console.log(collection, battlegrounds);
 
   const handleCreateBattleground = async () => {
-    console.log();
     if (!provider || !collection || !ticketToken || !participantsCap || !pointsPerDay) return;
 
     const tokenKey = new PublicKey(ticketToken);
@@ -112,6 +111,11 @@ export default function Collection() {
       )}
       <View>
         <div className="flex flex-col align-center text-center p-5 bg-base-200 rounded-2xl max-w-4xl mx-auto shadow-xl">
+          <Link to={`/`} className="absolute">
+            <button className="btn btn-outline my-auto">
+              <ArrowLeftIcon className="w-8 h-8" />
+            </button>
+          </Link>
           <img src={collection?.profile} className="logo w-48 h-48 mx-auto rounded-full" alt={collection?.name} />
           <span className="text-6xl font-bold text-center">{collection?.name}</span>
         </div>

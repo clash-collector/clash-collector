@@ -55,6 +55,7 @@ export const UserNftsProvider = ({ children }: { children: React.ReactNode }) =>
     for (const t of tokens) {
       result.push(await program.account.participantState.all([{ memcmp: { offset: 41, bytes: t.key.toString() } }]));
     }
+    console.log(result);
     setUserParticipants(
       result
         .flat()
@@ -68,6 +69,15 @@ export const UserNftsProvider = ({ children }: { children: React.ReactNode }) =>
       fetchUserParticipants();
     }
   }, [tokens, userParticipants]);
+
+  // useEffect(() => {
+  //   let interval = setInterval(() => {
+  //     fetchNfts();
+  //     fetchUserParticipants();
+  //   }, 15000);
+
+  //   return () => clearInterval(interval);
+  // });
 
   return <UserNftsContext.Provider value={{ tokens, userParticipants }}>{children}</UserNftsContext.Provider>;
 };

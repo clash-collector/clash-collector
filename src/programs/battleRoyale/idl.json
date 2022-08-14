@@ -251,7 +251,9 @@
           "isMut": true,
           "isSigner": false,
           "docs": [
-            "The participant state"
+            "The participant state",
+            "The participant account must not be alive or must be the winner of the last battle",
+            "This prevents reentering with the same NFT"
           ],
           "pda": {
             "seeds": [
@@ -795,7 +797,7 @@
             "type": "u32"
           },
           {
-            "name": "dead",
+            "name": "alive",
             "type": "bool"
           }
         ]
@@ -1006,5 +1008,8 @@
       "name": "WrongBattlegroundStatus",
       "msg": "Wrong battleground status"
     }
-  ]
+  ],
+  "metadata": {
+    "address": "EnLAsghi9Yp25djXr7o7RsGHQxXz8kcCpL6LnjGRmxEQ"
+  }
 }

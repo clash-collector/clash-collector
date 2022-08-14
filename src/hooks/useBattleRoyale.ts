@@ -31,6 +31,7 @@ export default function useBattleRoyale() {
 
   const fetchBattlegroundsByCollection = useCallback(
     async (collection: Collection) => {
+      console.log(collection, program);
       if (!program) return;
 
       const filters = collection.info.v2

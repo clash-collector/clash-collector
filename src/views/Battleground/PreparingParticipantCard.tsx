@@ -1,16 +1,38 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 import { NftAccount } from "../../contexts/UserNfts";
-import useBattleground from "../../hooks/useBattleground";
+import { ProgramMethodCallbacks } from "../../hooks/useBattleground";
 
-export default function PreparingParticipantCard({ token }: { token: NftAccount }) {
-  let { battlegroundId } = useParams();
-  const { joinBattleground } = useBattleground(Number(battlegroundId));
+export default function PreparingParticipantCard({
+  token,
+  joinBattleground,
+}: {
+  token: NftAccount;
+  joinBattleground: (
+    token: NftAccount,
+    attack: number,
+    defense: number,
+    whitelistProof?: number[][] | null,
+    callbacks?: ProgramMethodCallbacks
+  ) => Promise<void>;
+}) {
   const [characteristics, setCharacteristics] = useState<number>(50);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isInflight, setIsInflight] = useState<boolean>(false);
 
-  const handleSendToBattle = async (token: NftAccount) => {
-    await joinBattleground(token, characteristics, 100 - characteristics);
+  const handleSendToBattle = async () => {
+    setIsInflight(true);
+    await joinBattleground(token, characteristics, 100 - characteristics, null, {
+      onSuccess: () => {
+        toast.success(`Token ${token.name} entered the battleground`);
+      },
+      onError: (error) => {
+        console.log(error, Object.entries(error));
+        toast.error(error?.errorLogs || String(error));
+      },
+    });
+    setIsOpen(false);
+    setIsInflight(false);
   };
 
   return (
@@ -33,18 +55,25 @@ export default function PreparingParticipantCard({ token }: { token: NftAccount 
             <h3 className="text-xl font-bold">Send {} to the battleground</h3>
             <hr />
             <div className="flex flex-col gap-2 my-2">
-              <div className="w-100 justify-start">
+              <div className="w-full justify-start">
                 <span className="w-min font-bold">Characteristics</span>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  defaultValue="50"
-                  className="range"
-                  onChange={(e) => setCharacteristics(Number(e.target.value))}
-                />
+                <div className="flex flex-row gap-3 m-2">
+                  <span>Defense</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    defaultValue="50"
+                    className="range"
+                    onChange={(e) => setCharacteristics(Number(e.target.value))}
+                  />
+                  <span>Attack</span>
+                </div>
               </div>
-              <button className="btn btn-primary" onClick={() => handleSendToBattle(token)}>
+              <button
+                className={`btn btn-primary ${isInflight ? "btn-loading" : ""}`}
+                onClick={() => handleSendToBattle()}
+              >
                 Confirm
               </button>
             </div>
