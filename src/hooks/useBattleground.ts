@@ -46,6 +46,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
   const [participants, setParticipants] = useState<ParticipantAccount[]>();
 
   const fetchState = async () => {
+    console.log(provider, program, battleground, publicKey, id);
     if ((!publicKey && typeof id !== "number") || !program) return;
 
     let authorityAddress: PublicKey;
@@ -94,7 +95,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
     if (!battleground) {
       fetchState();
     }
-  }, [battleground]);
+  }, [battleground, publicKey, id]);
 
   const fetchParticipants = async () => {
     if (!program || !battleground) return;

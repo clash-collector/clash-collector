@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { BattlegroundAccount, ParticipantAccount, ProgramMethodCallbacks } from "../../hooks/useBattleground";
+import useMetadata from "../../hooks/useMetadata";
 import { ActionType } from "../../hooks/useParticipant";
 import useUserNfts from "../../hooks/useUserNfts";
 import { shortAddress, spendableActionPoints } from "../../utils";
@@ -29,7 +30,7 @@ export default function TargetCard({
 
   const pointsLeft = spendableActionPoints(source, battleground);
 
-  console.log(attack ? { attack } : { heal: true }, target, pointsToSpend, "points to spend");
+  const metadata = useMetadata(target.nftMint);
 
   const handleConfirmAction = async () => {
     setIsConfirming(true);
@@ -58,8 +59,10 @@ export default function TargetCard({
           : ""
       }`}
     >
-      <img src="" />
       <div className="card-body">
+        {metadata && metadata.json && (
+          <img src={metadata.json.image} alt="Profile picture" className="rounded-full w-24 h-24 mx-auto" />
+        )}
         <span className="card-title">{shortAddress(target.publicKey)}</span>
         <div className="flex flex-col text-start">
           <span className="text-xl font-bold">HP left: {target.healthPoints}</span>

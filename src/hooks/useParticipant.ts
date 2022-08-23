@@ -20,6 +20,8 @@ export default function useParticipant(publicKey?: PublicKey) {
   const { battleRoyale } = useBattleRoyale();
   const { battleground, participants } = useBattleground({ publicKey: participant?.battleground });
 
+  console.log(battleground, participant, participants);
+
   const fetchState = async () => {
     if (!publicKey || !program) return;
 
@@ -28,13 +30,11 @@ export default function useParticipant(publicKey?: PublicKey) {
     setParticipant({ ...state, publicKey });
   };
 
-  // console.log(battleground, participants);
-
   useEffect(() => {
     if (!participant) {
       fetchState();
     }
-  }, [participant, battleground, publicKey, program]);
+  }, [battleground, publicKey, program]);
 
   // Auto refresh data
   useEffect(() => {

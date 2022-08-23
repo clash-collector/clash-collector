@@ -13,7 +13,7 @@ export function shortAddress(address: anchor.web3.PublicKey | string) {
 }
 
 export const getTokenMetadata = (tokenMint: anchor.web3.PublicKey) => {
-  const [tokenMetadataAddress, bump] = anchor.web3.PublicKey.findProgramAddressSync(
+  const [tokenMetadataAddress] = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("metadata"), METADATA_PROGRAM_ID.toBuffer(), tokenMint.toBuffer()],
     METADATA_PROGRAM_ID
   );

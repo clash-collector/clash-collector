@@ -10,6 +10,7 @@ import useUserNfts from "../../hooks/useUserNfts";
 import FightingParticipantCard from "./FightingParticipantCard";
 import PreparingParticipantCard from "./PreparingParticipantCard";
 import toast from "react-hot-toast";
+import { shortAddress } from "../../utils";
 
 export default function Battleground() {
   let { battlegroundId } = useParams();
@@ -69,17 +70,24 @@ export default function Battleground() {
               {battleground?.status["preparing"] ? "Subscribed" : "Fighting"} participants
             </div>
             <div className="stat-value">{battleground?.participants}</div>
-            <div className="stat-desc">21% more than last month</div>
+            <div className="stat-desc">The battle end when it reaches 1</div>
           </div>
           <div className="stat">
             <div className="stat-title">Max # of participants</div>
             <div className="stat-value">{battleground?.participantsCap || "??"}</div>
-            <div className="stat-desc">21% more than last month</div>
+            <div className="stat-desc">The battleground needs to be full to start</div>
           </div>
           <div className="stat">
             <div className="stat-title">Ticket price</div>
             <div className="stat-value">{battleground?.ticketPrice}</div>
-            <div className="stat-desc">See on Solana.fm</div>
+            <div className="stat-desc text-base-800">
+              {battleground ? shortAddress(battleground?.potMint.toString()) : "???"}
+            </div>
+            <div className="stat-desc">
+              <a href={`https://solana.fm/address/${battleground?.potMint}`} target="_blank">
+                See on Solana.fm
+              </a>
+            </div>
           </div>
         </div>
         {battleground && (

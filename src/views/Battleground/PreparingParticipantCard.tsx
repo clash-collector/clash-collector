@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { NftAccount } from "../../contexts/UserNfts";
 import { ProgramMethodCallbacks } from "../../hooks/useBattleground";
+import useMetadata from "../../hooks/useMetadata";
 
 export default function PreparingParticipantCard({
   token,
@@ -20,6 +21,10 @@ export default function PreparingParticipantCard({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isInflight, setIsInflight] = useState<boolean>(false);
 
+  const metadata = useMetadata(token.key);
+
+  console.log(metadata);
+
   const handleSendToBattle = async () => {
     setIsInflight(true);
     await joinBattleground(token, characteristics, 100 - characteristics, null, {
@@ -37,16 +42,17 @@ export default function PreparingParticipantCard({
 
   return (
     <div className="rounded-2xl border-2 w-72 m-5">
-      <div>
-        <img src={token.uri} alt="Profile picture" className="rounded-t-2xl" />
-      </div>
+      {metadata && metadata.json && (
+        <div>
+          <img src={metadata.json.image} alt="Profile picture" className="rounded-t-2xl" />
+        </div>
+      )}
       <div className="flex flex-col gap-2 p-3 text-center">
         <span className="text-3xl font-bold">{token.name}</span>
         <span className="text-lg">{token.symbol}</span>
         <button className="btn btn-secondary" onClick={() => setIsOpen(true)}>
           Send to battle
         </button>
-        {/* <input type="checkbox" id={`send-to-battleground-modal-${token.key.toString()}`} className="modal-toggle" /> */}
         <label className={`modal cursor-pointer ${isOpen ? "modal-open" : ""}`}>
           <label className="modal-box relative" onClick={(e) => e.preventDefault()}>
             <label className="btn btn-sm btn-circle absolute right-2 top-2" onClick={() => setIsOpen(false)}>

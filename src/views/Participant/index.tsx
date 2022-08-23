@@ -3,9 +3,8 @@ import { PublicKey } from "@solana/web3.js";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import View from "../../components/View";
-import useBattleground from "../../hooks/useBattleground";
+import useMetadata from "../../hooks/useMetadata";
 import useParticipant from "../../hooks/useParticipant";
-import useUserNfts from "../../hooks/useUserNfts";
 import { shortAddress } from "../../utils";
 import TargetCard from "./TargetCard";
 
@@ -14,9 +13,7 @@ export default function Participant() {
   const { participant, participants, battleground, participantAction } = useParticipant(
     participantId ? new PublicKey(participantId) : undefined
   );
-  const { userParticipants } = useUserNfts();
-
-  console.log(participantId, participant, userParticipants, participants, battleground);
+  const metadata = useMetadata(participant?.nftMint);
 
   return (
     <View>
@@ -30,7 +27,12 @@ export default function Participant() {
                 </button>
               </Link>
             )}
-            <span className="text-2xl font-bold text-center">Participant {shortAddress(participant?.publicKey)}</span>
+            <div className="align-center">
+              {metadata && metadata.json && (
+                <img src={metadata.json.image} alt="Profile picture" className="rounded-full w-32 h-32 mx-auto" />
+              )}
+              <span className="text-6xl font-bold text-center">Participant {shortAddress(participant?.publicKey)}</span>
+            </div>
             <div className="stats shadow mt-5 flex flex-row">
               <div className="stat">
                 <div className="stat-title">Attack</div>
