@@ -3,6 +3,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Collection } from "../constants/collections";
 import { BattleRoyaleProgram, BattleRoyaleIdl, BATTLE_ROYALE_PROGRAM_ID } from "../programs/battleRoyale";
+import { BattlegroundAccount } from "./useBattleground";
 import useProvider from "./useProvider";
 
 export default function useBattleRoyale() {
@@ -30,28 +31,35 @@ export default function useBattleRoyale() {
   }, [gameMaster]);
 
   const fetchBattlegroundsByCollection = useCallback(
-    async (collection: Collection) => {
-      console.log(collection, program);
+    async (collection: Collection): Promise<BattlegroundAccount[] | undefined> => {
       if (!program) return;
 
       const filters = collection.info.v2
         ? [{ memcmp: { offset: 20, bytes: collection.info.v2.collectionMint.toString() } }]
         : [{ memcmp: { offset: 20, bytes: collection.info.v1!.verifiedCreators.map((e) => e.toString()).join("") } }];
-      return (await program.account.battlegroundState.all())
-        .map((e) => e.account)
-        .filter((e: any) => {
-          console.log(e);
-          if (e.collectionInfo.v2) {
-            console.log(
-              "v2",
-              e.collectionInfo.v2.collectionMint.toString(),
-              collection.info.v2?.collectionMint.toString()
-            );
-            return e.collectionInfo.v2.collectionMint.toString() === collection.info.v2?.collectionMint.toString();
-          } else if (e.collectionInfo.v1) {
-            return e.collectionInfo.v1 === collection.info.v1;
-          }
-        });
+
+      // Add extra fields
+      const accounts = (await Promise.all(
+        (
+          await program.account.battlegroundState.all()
+        ).map((e) => ({ ...e.account, publicKey: e.publicKey, potValue: 10 }))
+      )) as any;
+
+      // Return filtered accounts
+      // TODO: Use fetch filters instead
+      return accounts.filter((e: any) => {
+        console.log(e);
+        if (e.collectionInfo.v2) {
+          console.log(
+            "v2",
+            e.collectionInfo.v2.collectionMint.toString(),
+            collection.info.v2?.collectionMint.toString()
+          );
+          return e.collectionInfo.v2.collectionMint.toString() === collection.info.v2?.collectionMint.toString();
+        } else if (e.collectionInfo.v1) {
+          return e.collectionInfo.v1 === collection.info.v1;
+        }
+      });
     },
     [program]
   );

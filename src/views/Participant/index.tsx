@@ -56,11 +56,15 @@ export default function Participant() {
               </Link>
             )}
           </div>
-          <div className="mt-10 flex flex-row flex-wrap gap-5">
-            {battleground &&
-              participants?.map((e) => (
-                <TargetCard source={participant} target={e} battleground={battleground} action={participantAction} />
-              ))}
+          <div className="mt-5">
+            <span className="text-2xl font-bold">Targets</span>
+            <hr />
+            <div className="mt-10 flex flex-row flex-wrap gap-5">
+              {battleground &&
+                participants?.map((e) => (
+                  <TargetCard source={participant} target={e} battleground={battleground} action={participantAction} />
+                ))}
+            </div>
           </div>
         </>
       )}

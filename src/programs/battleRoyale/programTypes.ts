@@ -431,7 +431,7 @@ export type BattleRoyaleProgram = {
           };
         },
         {
-          name: "participantState";
+          name: "participant";
           isMut: true;
           isSigner: false;
           pda: {
@@ -451,13 +451,13 @@ export type BattleRoyaleProgram = {
                 kind: "account";
                 type: "publicKey";
                 account: "ParticipantState";
-                path: "participant_state.nft_mint";
+                path: "participant.nft_mint";
               }
             ];
           };
         },
         {
-          name: "targetParticipantState";
+          name: "targetParticipant";
           isMut: true;
           isSigner: false;
           pda: {
@@ -477,7 +477,7 @@ export type BattleRoyaleProgram = {
                 kind: "account";
                 type: "publicKey";
                 account: "ParticipantState";
-                path: "target_participant_state.nft_mint";
+                path: "target_participant.nft_mint";
               }
             ];
           };
@@ -623,6 +623,90 @@ export type BattleRoyaleProgram = {
         {
           name: "winnerNftTokenAccount";
           isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "tokenProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "associatedTokenProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "systemProgram";
+          isMut: false;
+          isSigner: false;
+        },
+        {
+          name: "rent";
+          isMut: false;
+          isSigner: false;
+        }
+      ];
+      args: [];
+    },
+    {
+      name: "leaveBattleground";
+      accounts: [
+        {
+          name: "signer";
+          isMut: true;
+          isSigner: true;
+        },
+        {
+          name: "battleRoyale";
+          isMut: false;
+          isSigner: false;
+          docs: ["The Battle Royale state"];
+          pda: {
+            seeds: [
+              {
+                kind: "const";
+                type: "string";
+                value: "battle-royale-state-seeds";
+              }
+            ];
+          };
+        },
+        {
+          name: "battleground";
+          isMut: false;
+          isSigner: false;
+          docs: ["The battleground the participant is entering"];
+          pda: {
+            seeds: [
+              {
+                kind: "const";
+                type: "string";
+                value: "battleground-state-seeds";
+              },
+              {
+                kind: "account";
+                type: "u64";
+                account: "BattlegroundState";
+                path: "battleground.id";
+              }
+            ];
+          };
+        },
+        {
+          name: "participant";
+          isMut: true;
+          isSigner: false;
+          docs: ["The participant state"];
+        },
+        {
+          name: "nftMint";
+          isMut: false;
+          isSigner: false;
+          docs: ["The NFT used to participate"];
+        },
+        {
+          name: "playerNftTokenAccount";
+          isMut: true;
           isSigner: false;
         },
         {
@@ -876,6 +960,21 @@ export type BattleRoyaleProgram = {
         {
           name: "defense";
           type: "u32";
+          index: false;
+        }
+      ];
+    },
+    {
+      name: "LeaveBattlegroundEvent";
+      fields: [
+        {
+          name: "battleground";
+          type: "publicKey";
+          index: false;
+        },
+        {
+          name: "nftMint";
+          type: "publicKey";
           index: false;
         }
       ];
@@ -1410,7 +1509,7 @@ export const IDL: BattleRoyaleProgram = {
           },
         },
         {
-          name: "participantState",
+          name: "participant",
           isMut: true,
           isSigner: false,
           pda: {
@@ -1430,13 +1529,13 @@ export const IDL: BattleRoyaleProgram = {
                 kind: "account",
                 type: "publicKey",
                 account: "ParticipantState",
-                path: "participant_state.nft_mint",
+                path: "participant.nft_mint",
               },
             ],
           },
         },
         {
-          name: "targetParticipantState",
+          name: "targetParticipant",
           isMut: true,
           isSigner: false,
           pda: {
@@ -1456,7 +1555,7 @@ export const IDL: BattleRoyaleProgram = {
                 kind: "account",
                 type: "publicKey",
                 account: "ParticipantState",
-                path: "target_participant_state.nft_mint",
+                path: "target_participant.nft_mint",
               },
             ],
           },
@@ -1602,6 +1701,90 @@ export const IDL: BattleRoyaleProgram = {
         {
           name: "winnerNftTokenAccount",
           isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "tokenProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "associatedTokenProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "systemProgram",
+          isMut: false,
+          isSigner: false,
+        },
+        {
+          name: "rent",
+          isMut: false,
+          isSigner: false,
+        },
+      ],
+      args: [],
+    },
+    {
+      name: "leaveBattleground",
+      accounts: [
+        {
+          name: "signer",
+          isMut: true,
+          isSigner: true,
+        },
+        {
+          name: "battleRoyale",
+          isMut: false,
+          isSigner: false,
+          docs: ["The Battle Royale state"],
+          pda: {
+            seeds: [
+              {
+                kind: "const",
+                type: "string",
+                value: "battle-royale-state-seeds",
+              },
+            ],
+          },
+        },
+        {
+          name: "battleground",
+          isMut: false,
+          isSigner: false,
+          docs: ["The battleground the participant is entering"],
+          pda: {
+            seeds: [
+              {
+                kind: "const",
+                type: "string",
+                value: "battleground-state-seeds",
+              },
+              {
+                kind: "account",
+                type: "u64",
+                account: "BattlegroundState",
+                path: "battleground.id",
+              },
+            ],
+          },
+        },
+        {
+          name: "participant",
+          isMut: true,
+          isSigner: false,
+          docs: ["The participant state"],
+        },
+        {
+          name: "nftMint",
+          isMut: false,
+          isSigner: false,
+          docs: ["The NFT used to participate"],
+        },
+        {
+          name: "playerNftTokenAccount",
+          isMut: true,
           isSigner: false,
         },
         {
@@ -1855,6 +2038,21 @@ export const IDL: BattleRoyaleProgram = {
         {
           name: "defense",
           type: "u32",
+          index: false,
+        },
+      ],
+    },
+    {
+      name: "LeaveBattlegroundEvent",
+      fields: [
+        {
+          name: "battleground",
+          type: "publicKey",
+          index: false,
+        },
+        {
+          name: "nftMint",
+          type: "publicKey",
           index: false,
         },
       ],

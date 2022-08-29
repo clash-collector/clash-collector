@@ -6,6 +6,8 @@ import { ActionType } from "../../hooks/useParticipant";
 import useUserNfts from "../../hooks/useUserNfts";
 import { shortAddress, spendableActionPoints } from "../../utils";
 
+import skullSvg from "../../assets/skull.svg";
+
 export default function TargetCard({
   source,
   target,
@@ -61,7 +63,18 @@ export default function TargetCard({
     >
       <div className="card-body">
         {metadata && metadata.json && (
-          <img src={metadata.json.image} alt="Profile picture" className="rounded-full w-24 h-24 mx-auto" />
+          <div className="relative">
+            {!target.alive && (
+              <div className="absolute w-full">
+                <img
+                  src={skullSvg}
+                  alt="Dead participant"
+                  className="rounded-full w-24 h-24 mx-auto opacity-50 animate-pulse"
+                />
+              </div>
+            )}
+            <img src={metadata.json.image} alt="Profile picture" className="rounded-full w-24 h-24 mx-auto" />
+          </div>
         )}
         <span className="card-title">{shortAddress(target.publicKey)}</span>
         <div className="flex flex-col text-start">

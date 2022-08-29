@@ -21,7 +21,6 @@ export declare type BaseBattlegroundAccount = IdlAccounts<BattleRoyaleProgram>["
 export interface BattlegroundAccount extends BaseBattlegroundAccount {
   publicKey: PublicKey;
   potValue: number;
-  ticketPrice: number;
 }
 export declare type BaseParticipantAccount = IdlAccounts<BattleRoyaleProgram>["participantState"];
 export interface ParticipantAccount extends BaseParticipantAccount {

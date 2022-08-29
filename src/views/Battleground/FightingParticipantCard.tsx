@@ -4,6 +4,8 @@ import { BattlegroundAccount, ParticipantAccount } from "../../hooks/useBattlegr
 import useMetadata from "../../hooks/useMetadata";
 import { shortAddress, spendableActionPoints } from "../../utils";
 
+import skullSvg from "../../assets/skull.svg";
+
 export default function FightingParticipantCard({
   participant,
   battleground,
@@ -22,7 +24,16 @@ export default function FightingParticipantCard({
   return (
     <div className="rounded-2xl border-2 w-72 m-5">
       {metadata && metadata.json && (
-        <div>
+        <div className="relative">
+          {!participant.alive && (
+            <div className="absolute w-full">
+              <img
+                src={skullSvg}
+                alt="Dead participant"
+                className="rounded-full w-72 h-72 mx-auto opacity-50 animate-pulse"
+              />
+            </div>
+          )}
           <img src={metadata.json.image} alt="Profile picture" className="rounded-t-2xl" />
         </div>
       )}

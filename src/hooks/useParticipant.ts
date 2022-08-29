@@ -62,8 +62,8 @@ export default function useParticipant(publicKey?: PublicKey) {
           signer: provider.publicKey,
           battleRoyaleState: battleRoyale,
           battlegroundState: battleground.publicKey,
-          participantState: participant.publicKey,
-          targetParticipantState: target.publicKey,
+          participant: participant.publicKey,
+          targetParticipant: target.publicKey,
           playerNftTokenAccount,
           clock: SYSVAR_CLOCK_PUBKEY,
         })
@@ -76,5 +76,30 @@ export default function useParticipant(publicKey?: PublicKey) {
     }
   };
 
-  return { battleground, participant, participants, participantAction };
+  const leaveBattleground = async (callbacks: ProgramMethodCallbacks) => {
+    if (!program || !provider || !participant || !battleground) return;
+
+    const playerNftTokenAccount = await getAssociatedTokenAddress(participant.nftMint, provider.publicKey, true);
+
+    try {
+      const tx = await program.methods
+        .leaveBattleground()
+        .accounts({
+          signer: provider.publicKey,
+          battleRoyale: battleRoyale,
+          battleground: battleground.publicKey,
+          participant: participant.publicKey,
+          nftMint: participant.nftMint,
+          playerNftTokenAccount,
+        })
+        .rpc();
+      await provider.connection.confirmTransaction(tx);
+      await fetchState();
+      callbacks?.onSuccess && callbacks.onSuccess();
+    } catch (e) {
+      callbacks?.onError && callbacks.onError(e);
+    }
+  };
+
+  return { battleground, participant, participants, participantAction, leaveBattleground };
 }

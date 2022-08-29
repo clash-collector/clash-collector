@@ -26,6 +26,7 @@ import NftsView from "./views/NFTs";
 import { UserNftsProvider } from "./contexts/UserNfts";
 import { IS_MAINNET } from "./constants";
 import { Toaster } from "react-hot-toast";
+import { TokensProvider } from "./contexts/Tokens";
 
 const Router = () => {
   return (
@@ -79,7 +80,9 @@ const Providers: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
-          <UserNftsProvider>{children}</UserNftsProvider>
+          <TokensProvider>
+            <UserNftsProvider>{children}</UserNftsProvider>
+          </TokensProvider>
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>
