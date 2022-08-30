@@ -56,7 +56,7 @@ export default function TargetCard({
           ? "border-red-500 border-4"
           : source.publicKey.equals(target.publicKey)
           ? "border-emerald-500 border-4"
-          : tokens?.find((e) => e.key.equals(target.nftMint))
+          : tokens?.find((e) => e.mintAddress.equals(target.nftMint))
           ? "border-cyan-500 border-4"
           : ""
       }`}
@@ -107,7 +107,7 @@ export default function TargetCard({
         ) : source.publicKey.equals(target.publicKey) ? (
           <span className="text-emerald-500">This is you</span>
         ) : (
-          tokens?.find((e) => e.key.equals(target.nftMint)) && (
+          tokens?.find((e) => e.mintAddress.equals(target.nftMint)) && (
             <span className="text-cyan-500">You own this participant</span>
           )
         )}

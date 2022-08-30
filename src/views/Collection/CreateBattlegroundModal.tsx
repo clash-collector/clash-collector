@@ -26,8 +26,6 @@ export default function CreateBattlegroundModal({ collection, isOpen, onClose }:
   const [participantsCap, setParticipantsCap] = useState<number>();
   const [pointsPerDay, setPointsPerDay] = useState<number>();
 
-  console.log(ticketToken, document.activeElement, document.getElementById("token-input"));
-
   const filteredTokenNames = names
     ? query === ""
       ? [...names?.keys()]
@@ -78,7 +76,7 @@ export default function CreateBattlegroundModal({ collection, isOpen, onClose }:
                 try {
                   const addr = new PublicKey(e.target.value);
                   setTicketToken(addr.toString());
-                } catch (e) {
+                } catch (err) {
                   setQuery(e.target.value);
                 }
               }}

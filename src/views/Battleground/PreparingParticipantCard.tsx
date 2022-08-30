@@ -1,6 +1,6 @@
+import { Metadata } from "@metaplex-foundation/js";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { NftAccount } from "../../contexts/UserNfts";
 import { ProgramMethodCallbacks } from "../../hooks/useBattleground";
 import useMetadata from "../../hooks/useMetadata";
 
@@ -8,9 +8,9 @@ export default function PreparingParticipantCard({
   token,
   joinBattleground,
 }: {
-  token: NftAccount;
+  token: Metadata;
   joinBattleground: (
-    token: NftAccount,
+    token: Metadata,
     attack: number,
     defense: number,
     whitelistProof?: number[][] | null,
@@ -21,9 +21,7 @@ export default function PreparingParticipantCard({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isInflight, setIsInflight] = useState<boolean>(false);
 
-  const metadata = useMetadata(token.key);
-
-  console.log(metadata);
+  const metadata = useMetadata(token.mintAddress);
 
   const handleSendToBattle = async () => {
     setIsInflight(true);
@@ -41,7 +39,7 @@ export default function PreparingParticipantCard({
   };
 
   return (
-    <div className="rounded-2xl border-2 w-72 m-5">
+    <div className="rounded-2xl border-2 w-48 m-5">
       {metadata && metadata.json && (
         <div>
           <img src={metadata.json.image} alt="Profile picture" className="rounded-t-2xl" />

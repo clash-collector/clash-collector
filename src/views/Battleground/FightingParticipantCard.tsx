@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { BattlegroundAccount, ParticipantAccount } from "../../hooks/useBattleground";
 import useMetadata from "../../hooks/useMetadata";
 import { shortAddress, spendableActionPoints } from "../../utils";
@@ -22,7 +22,7 @@ export default function FightingParticipantCard({
   }, [participant, battleground]);
 
   return (
-    <div className="rounded-2xl border-2 w-72 m-5">
+    <div className="rounded-2xl border-2 w-48 m-5">
       {metadata && metadata.json && (
         <div className="relative">
           {!participant.alive && (
@@ -45,10 +45,13 @@ export default function FightingParticipantCard({
           <span className="text-xl font-bold">Defense: {participant.defense}</span>
           {battleground.status["ongoing"] && <span className="text-xl font-bold">Action points left: {points}</span>}
         </div>
-        {battleground.status["ongoing"] && (
+        {battleground.status["ongoing"] && participant.alive && (
           <Link to={`/participant/${participant.publicKey.toString()}`}>
             <button className="btn btn-secondary w-full">Spend action points</button>
           </Link>
+        )}
+        {battleground.status["preparing"] && !participant.alive && (
+          <button className="btn btn-secondary w-full">Leave battleground</button>
         )}
       </div>
     </div>

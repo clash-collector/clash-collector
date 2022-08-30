@@ -51,9 +51,11 @@ export default function Participant() {
               </div>
             </div>
             {battleground && participant.alive && battleground?.participants === 1 && (
-              <Link to={`/battleground/${battleground.id}`}>
-                <button className="btn btn-success mt-5 w-full">You won!</button>
-              </Link>
+              <div className="tooltip absolute" data-tip={`Go back to battleground ${battleground.id}`}>
+                <Link to={`/battleground/${battleground.id}`}>
+                  <button className="btn btn-success mt-5 w-full">You won!</button>
+                </Link>
+              </div>
             )}
           </div>
           <div className="mt-5">

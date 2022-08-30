@@ -1,9 +1,9 @@
+import { Metadata } from "@metaplex-foundation/js";
 import * as anchor from "@project-serum/anchor";
 import { BN, IdlAccounts, Program } from "@project-serum/anchor";
 import { getAccount, getAssociatedTokenAddress, getMint } from "@solana/spl-token";
 import { PublicKey, SYSVAR_CLOCK_PUBKEY } from "@solana/web3.js";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { NftAccount } from "../contexts/UserNfts";
 import {
   BattleRoyaleProgram,
   BattleRoyaleIdl,
@@ -21,6 +21,7 @@ export declare type BaseBattlegroundAccount = IdlAccounts<BattleRoyaleProgram>["
 export interface BattlegroundAccount extends BaseBattlegroundAccount {
   publicKey: PublicKey;
   potValue: number;
+  ticketPrice: number;
 }
 export declare type BaseParticipantAccount = IdlAccounts<BattleRoyaleProgram>["participantState"];
 export interface ParticipantAccount extends BaseParticipantAccount {
@@ -45,7 +46,6 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
   const [participants, setParticipants] = useState<ParticipantAccount[]>();
 
   const fetchState = async () => {
-    console.log(provider, program, battleground, publicKey, id);
     if ((!publicKey && typeof id !== "number") || !program) return;
 
     let authorityAddress: PublicKey;
@@ -121,7 +121,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
 
   const joinBattleground = useCallback(
     async (
-      token: NftAccount,
+      token: Metadata,
       attack: number,
       defense: number,
       whitelistProof: number[][] | null = null,
@@ -138,14 +138,14 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
         BATTLE_ROYALE_PROGRAM_ID
       );
       const [participantAddress] = PublicKey.findProgramAddressSync(
-        [PARTICIPANT_STATE_SEEDS, battlegroundAddress.toBuffer(), token.key.toBuffer()],
+        [PARTICIPANT_STATE_SEEDS, battlegroundAddress.toBuffer(), token.mintAddress.toBuffer()],
         BATTLE_ROYALE_PROGRAM_ID
       );
       const potAccount = await getAssociatedTokenAddress(battleground.potMint, authorityAddress, true);
       const devAccount = await getAssociatedTokenAddress(battleground.potMint, gameMaster, true);
       const playerAccount = await getAssociatedTokenAddress(battleground.potMint, provider.publicKey, true);
-      const playerNftTokenAccount = await getAssociatedTokenAddress(token.key, provider.publicKey, true);
-      const tokenMetadata = getTokenMetadata(token.key);
+      const playerNftTokenAccount = await getAssociatedTokenAddress(token.mintAddress, provider.publicKey, true);
+      const tokenMetadata = getTokenMetadata(token.mintAddress);
 
       try {
         const tx = await program.methods
@@ -158,7 +158,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
             battleground: battlegroundAddress,
             participant: participantAddress,
             potMint: battleground.potMint,
-            nftMint: token.key,
+            nftMint: token.mintAddress,
             nftMetadata: tokenMetadata,
             potAccount,
             devAccount,

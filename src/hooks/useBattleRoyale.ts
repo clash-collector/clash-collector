@@ -1,8 +1,14 @@
 import { BN, Program } from "@project-serum/anchor";
+import { getAccount, getAssociatedTokenAddress, getMint } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Collection } from "../constants/collections";
-import { BattleRoyaleProgram, BattleRoyaleIdl, BATTLE_ROYALE_PROGRAM_ID } from "../programs/battleRoyale";
+import {
+  BattleRoyaleProgram,
+  BattleRoyaleIdl,
+  BATTLE_ROYALE_PROGRAM_ID,
+  BATTLEGROUND_AUTHORITY_SEEDS,
+} from "../programs/battleRoyale";
 import { BattlegroundAccount } from "./useBattleground";
 import useProvider from "./useProvider";
 
@@ -42,7 +48,29 @@ export default function useBattleRoyale() {
       const accounts = (await Promise.all(
         (
           await program.account.battlegroundState.all()
-        ).map((e) => ({ ...e.account, publicKey: e.publicKey, potValue: 10 }))
+        ).map(async (e) => {
+          const mint = await getMint(program.provider.connection, e.account.potMint);
+          let potValue;
+          try {
+            const [authorityAddress] = PublicKey.findProgramAddressSync(
+              [BATTLEGROUND_AUTHORITY_SEEDS, e.account.id.toArrayLike(Buffer, "le", 8)],
+              BATTLE_ROYALE_PROGRAM_ID
+            );
+            const tokenAccount = await getAccount(
+              program.provider.connection,
+              await getAssociatedTokenAddress(mint.address, authorityAddress, true)
+            );
+            potValue = new BN(tokenAccount.amount.toString()).toNumber() / new BN(10 ** mint.decimals).toNumber();
+          } catch (err) {
+            potValue = new BN(0);
+          }
+          return {
+            ...e.account,
+            publicKey: e.publicKey,
+            potValue,
+            ticketPrice: new BN(e.account.entryFee.toString()).toNumber() / new BN(10 ** mint.decimals).toNumber(),
+          };
+        })
       )) as any;
 
       // Return filtered accounts
@@ -50,11 +78,6 @@ export default function useBattleRoyale() {
       return accounts.filter((e: any) => {
         console.log(e);
         if (e.collectionInfo.v2) {
-          console.log(
-            "v2",
-            e.collectionInfo.v2.collectionMint.toString(),
-            collection.info.v2?.collectionMint.toString()
-          );
           return e.collectionInfo.v2.collectionMint.toString() === collection.info.v2?.collectionMint.toString();
         } else if (e.collectionInfo.v1) {
           return e.collectionInfo.v1 === collection.info.v1;
@@ -74,8 +97,15 @@ export default function useBattleRoyale() {
     ) => {
       if (!program) return;
 
+      const mint = await getMint(program.provider.connection, ticketToken);
+
       const tx = await program.methods
-        .createBattleground(collection.info as any, participantsCap, new BN(ticketCost), pointsPerDay)
+        .createBattleground(
+          collection.info as any,
+          participantsCap,
+          new BN(ticketCost * 10 ** mint.decimals),
+          pointsPerDay
+        )
         .accounts({
           signer: program.provider.publicKey,
           battleRoyaleState: battleRoyale,

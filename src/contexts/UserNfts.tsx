@@ -1,22 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Metaplex } from "@metaplex-foundation/js";
-import * as anchor from "@project-serum/anchor";
+import { FindNftsByOwnerOutput, Metadata, Metaplex } from "@metaplex-foundation/js";
 import useProvider from "../hooks/useProvider";
 import { Program } from "@project-serum/anchor";
 import { BattleRoyaleIdl, BattleRoyaleProgram, BATTLE_ROYALE_PROGRAM_ID } from "../programs/battleRoyale";
 import { ParticipantAccount } from "../hooks/useBattleground";
-import { PublicKey } from "@solana/web3.js";
-
-export interface NftAccount {
-  key: anchor.web3.PublicKey;
-  metadata: anchor.web3.PublicKey;
-  name: string;
-  symbol: string;
-  uri: string;
-}
 
 interface UserNftsContextProps {
-  tokens?: NftAccount[];
+  tokens?: Metadata[];
   userParticipants?: ParticipantAccount[];
   fetchUserParticipants: () => Promise<void>;
 }
@@ -32,16 +22,18 @@ export const UserNftsProvider = ({ children }: { children: React.ReactNode }) =>
       return new Program<BattleRoyaleProgram>(BattleRoyaleIdl, BATTLE_ROYALE_PROGRAM_ID, provider);
     }
   }, [provider]);
-  const [tokens, setTokens] = useState<NftAccount[]>();
+  const [tokens, setTokens] = useState<Metadata[]>();
   const [userParticipants, setUserParticipants] = useState<ParticipantAccount[]>();
 
   const fetchNfts = async () => {
     if (!provider) return;
-    const accounts = await new Metaplex(provider.connection).nfts().findAllByOwner(provider.publicKey).run();
-    console.log(accounts);
-    setTokens(
-      accounts.map((e) => ({ key: e.mintAddress, metadata: e.address, name: e.name, symbol: e.symbol, uri: e.uri }))
-    );
+    const accounts: FindNftsByOwnerOutput = await new Metaplex(provider.connection)
+      .nfts()
+      .findAllByOwner(provider.publicKey)
+      .run();
+    const metadatas = accounts.filter((e) => e.model === "metadata") as Metadata[];
+    console.log(metadatas);
+    setTokens(metadatas);
   };
 
   useEffect(() => {
@@ -55,9 +47,10 @@ export const UserNftsProvider = ({ children }: { children: React.ReactNode }) =>
 
     const result: any[] = [];
     for (const t of tokens) {
-      result.push(await program.account.participantState.all([{ memcmp: { offset: 41, bytes: t.key.toString() } }]));
+      result.push(
+        await program.account.participantState.all([{ memcmp: { offset: 41, bytes: t.mintAddress.toString() } }])
+      );
     }
-    console.log(result);
     setUserParticipants(
       result
         .flat()

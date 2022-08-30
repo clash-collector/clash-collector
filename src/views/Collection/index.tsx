@@ -29,11 +29,13 @@ export default function Collection() {
   return (
     <View>
       <div className="flex flex-col align-center text-center p-5 bg-base-200 rounded-2xl max-w-4xl mx-auto shadow-xl">
-        <Link to={`/`} className="absolute">
-          <button className="btn btn-outline my-auto">
-            <ArrowLeftIcon className="w-8 h-8" />
-          </button>
-        </Link>
+        <div className="tooltip absolute" data-tip={`Go back to all collections`}>
+          <Link to={`/`}>
+            <button className="btn btn-outline my-auto">
+              <ArrowLeftIcon className="w-8 h-8" />
+            </button>
+          </Link>
+        </div>
         <img src={collection?.profile} className="logo w-48 h-48 mx-auto rounded-full" alt={collection?.name} />
         <span className="text-6xl font-bold text-center">{collection?.name}</span>
       </div>

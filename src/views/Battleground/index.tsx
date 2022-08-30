@@ -4,13 +4,13 @@ import { Link, useParams } from "react-router-dom";
 import deepEqual from "deep-equal";
 import View from "../../components/View";
 import { collections } from "../../constants";
-import { NftAccount } from "../../contexts/UserNfts";
 import useBattleground from "../../hooks/useBattleground";
 import useUserNfts from "../../hooks/useUserNfts";
 import FightingParticipantCard from "./FightingParticipantCard";
 import PreparingParticipantCard from "./PreparingParticipantCard";
 import toast from "react-hot-toast";
-import { shortAddress } from "../../utils";
+import TokenIcon from "../../components/TokenIcon";
+import { isPartOfCollection } from "../../utils";
 
 export default function Battleground() {
   let { battlegroundId } = useParams();
@@ -56,37 +56,42 @@ export default function Battleground() {
       <div className="flex flex-col align-center text-center p-5 bg-base-200 rounded-2xl max-w-4xl mx-auto shadow-xl">
         <div className="flex flex-col align-center">
           {parentCollection && (
-            <Link to={`/collection/${parentCollection.id}`} className="absolute">
-              <button className="btn btn-outline my-auto">
-                <ArrowLeftIcon className="w-8 h-8" />
-              </button>
-            </Link>
+            <div className="tooltip absolute" data-tip={`Go back to ${parentCollection.name}`}>
+              <Link to={`/collection/${parentCollection.id}`}>
+                <button className="btn btn-outline my-auto">
+                  <ArrowLeftIcon className="w-8 h-8" />
+                </button>
+              </Link>
+            </div>
           )}
           <span className="text-6xl font-bold text-center">Battleground #{battlegroundId}</span>
         </div>
         <div className="stats shadow mt-5 flex flex-row">
           <div className="stat">
-            <div className="stat-title">
-              {battleground?.status["preparing"] ? "Subscribed" : "Fighting"} participants
+            <div className="stat-title">Participants</div>
+            <div className="stat-value flex flex-row align-middle">
+              <div className="w-min mx-auto">
+                {battleground ? battleground.participants : "??"} / {battleground?.participantsCap || "??"}
+              </div>
             </div>
-            <div className="stat-value">{battleground?.participants}</div>
-            <div className="stat-desc">The battle end when it reaches 1</div>
-          </div>
-          <div className="stat">
-            <div className="stat-title">Max # of participants</div>
-            <div className="stat-value">{battleground?.participantsCap || "??"}</div>
-            <div className="stat-desc">The battleground needs to be full to start</div>
+            <div className="stat-desc">The battle start when it's full</div>
           </div>
           <div className="stat">
             <div className="stat-title">Ticket price</div>
             <div className="stat-value">{battleground?.ticketPrice}</div>
             <div className="stat-desc text-base-800">
-              {battleground ? shortAddress(battleground?.potMint.toString()) : "???"}
+              <div className="w-min mx-auto">
+                <TokenIcon mint={battleground?.potMint} explorer />
+              </div>
             </div>
-            <div className="stat-desc">
-              <a href={`https://solana.fm/address/${battleground?.potMint}`} target="_blank">
-                See on Solana.fm
-              </a>
+          </div>
+          <div className="stat">
+            <div className="stat-title">Pot</div>
+            <div className="stat-value">{battleground?.potValue}</div>
+            <div className="stat-desc text-base-800">
+              <div className="w-min mx-auto">
+                <TokenIcon mint={battleground?.potMint} explorer />
+              </div>
             </div>
           </div>
         </div>
@@ -140,10 +145,13 @@ export default function Battleground() {
             <hr />
             <div className="flex flex-row flex-wrap justify-center">
               {tokens
-                .filter((token) => !userParticipants?.find((participant) => participant.nftMint.equals(token.key)))
+                .filter(
+                  (token) => !userParticipants?.find((participant) => participant.nftMint.equals(token.mintAddress))
+                )
+                .filter((token) => isPartOfCollection(token, battleground.collectionInfo))
                 .map((token) => (
                   <PreparingParticipantCard
-                    key={token.key.toString()}
+                    key={token.mintAddress.toString()}
                     token={token}
                     joinBattleground={joinBattleground}
                   />
