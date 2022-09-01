@@ -1,4 +1,4 @@
-import { BN, Program } from "@project-serum/anchor";
+import { BN, IdlAccounts, Program } from "@project-serum/anchor";
 import { getAccount, getAssociatedTokenAddress, getMint } from "@solana/spl-token";
 import { PublicKey } from "@solana/web3.js";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -12,6 +12,11 @@ import {
 import { BattlegroundAccount } from "./useBattleground";
 import useProvider from "./useProvider";
 
+export declare type BaseBattleRoyaleAccount = IdlAccounts<BattleRoyaleProgram>["battleRoyaleState"];
+export interface BattleRoyaleAccount extends BaseBattleRoyaleAccount {
+  publicKey: PublicKey;
+}
+
 export default function useBattleRoyale() {
   const provider = useProvider();
   const program = useMemo(() => {
@@ -20,21 +25,19 @@ export default function useBattleRoyale() {
     }
   }, [provider]);
   const [gameMaster, setGameMaster] = useState<PublicKey>();
-  const [battleRoyale, setBattleRoyale] = useState<PublicKey>();
+  const [battleRoyale, setBattleRoyale] = useState<BattleRoyaleAccount>();
 
   const fetchState = async () => {
     if (!program) return;
 
     const result = await program.account.battleRoyaleState.all();
     setGameMaster(result[0].account.gameMaster);
-    setBattleRoyale(result[0].publicKey);
+    setBattleRoyale({ ...result[0].account, publicKey: result[0].publicKey });
   };
 
   useEffect(() => {
-    if (!gameMaster) {
-      fetchState();
-    }
-  }, [gameMaster]);
+    fetchState();
+  }, [provider?.publicKey]);
 
   const fetchBattlegroundsByCollection = useCallback(
     async (collection: Collection): Promise<BattlegroundAccount[] | undefined> => {
@@ -108,7 +111,7 @@ export default function useBattleRoyale() {
         )
         .accounts({
           signer: program.provider.publicKey,
-          battleRoyaleState: battleRoyale,
+          battleRoyaleState: battleRoyale?.publicKey,
           potMint: ticketToken,
         })
         .rpc();

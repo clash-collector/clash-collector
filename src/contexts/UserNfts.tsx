@@ -27,13 +27,17 @@ export const UserNftsProvider = ({ children }: { children: React.ReactNode }) =>
 
   const fetchNfts = async () => {
     if (!provider) return;
-    const accounts: FindNftsByOwnerOutput = await new Metaplex(provider.connection)
-      .nfts()
-      .findAllByOwner(provider.publicKey)
-      .run();
-    const metadatas = accounts.filter((e) => e.model === "metadata") as Metadata[];
-    console.log(metadatas);
-    setTokens(metadatas);
+    try {
+      const accounts: FindNftsByOwnerOutput = await new Metaplex(provider.connection)
+        .nfts()
+        .findAllByOwner(provider.publicKey)
+        .run();
+      const metadatas = accounts.filter((e) => e.model === "metadata") as Metadata[];
+      console.log(metadatas);
+      setTokens(metadatas);
+    } catch (err) {
+      console.log("Failed to fetch user NFTs:", err);
+    }
   };
 
   useEffect(() => {

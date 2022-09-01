@@ -7,6 +7,7 @@ import useUserNfts from "../../hooks/useUserNfts";
 import { shortAddress, spendableActionPoints } from "../../utils";
 
 import skullSvg from "../../assets/skull.svg";
+import ParticipantStatistics from "../../components/ParticipantStatistics";
 
 export default function TargetCard({
   source,
@@ -61,7 +62,7 @@ export default function TargetCard({
           : ""
       }`}
     >
-      <div className="card-body">
+      <div className="card-body p-2">
         {metadata && metadata.json && (
           <div className="relative">
             {!target.alive && (
@@ -77,12 +78,8 @@ export default function TargetCard({
           </div>
         )}
         <span className="card-title">{shortAddress(target.publicKey)}</span>
-        <div className="flex flex-col text-start">
-          <span className="text-xl font-bold">HP left: {target.healthPoints}</span>
-          <span className="text-xl font-bold">Attack: {target.attack}</span>
-          <span className="text-xl font-bold">Defense: {target.defense}</span>
-        </div>
-        <div className="card-actions">
+        <ParticipantStatistics participant={target} />
+        <div className="card-actions justify-center">
           <button
             className="btn btn-danger"
             onClick={() => {
@@ -117,7 +114,9 @@ export default function TargetCard({
           <label className="btn btn-sm btn-circle absolute right-2 top-2" onClick={() => setIsOpen(false)}>
             ✕
           </label>
-          <h3 className="text-lg font-bold">{attack ? "Attack" : "Heal"} participant XXX</h3>
+          <h3 className="text-lg font-bold">
+            {attack ? "Attack" : "Heal"} participant {shortAddress(target.nftMint)}
+          </h3>
           <div className="flex flex-row gap-2">
             <span>0</span>
             <input

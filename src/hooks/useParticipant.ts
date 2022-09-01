@@ -51,7 +51,7 @@ export default function useParticipant(publicKey?: PublicKey) {
     pointsToSpend: number,
     callbacks: ProgramMethodCallbacks
   ) => {
-    if (!program || !provider || !participant || !battleground) return;
+    if (!program || !provider || !participant || !battleground || !battleRoyale) return;
 
     const playerNftTokenAccount = await getAssociatedTokenAddress(participant.nftMint, provider.publicKey, true);
 
@@ -60,7 +60,7 @@ export default function useParticipant(publicKey?: PublicKey) {
         .participantAction(actionType, pointsToSpend)
         .accounts({
           signer: provider.publicKey,
-          battleRoyaleState: battleRoyale,
+          battleRoyaleState: battleRoyale.publicKey,
           battlegroundState: battleground.publicKey,
           participant: participant.publicKey,
           targetParticipant: target.publicKey,
@@ -77,7 +77,7 @@ export default function useParticipant(publicKey?: PublicKey) {
   };
 
   const leaveBattleground = async (callbacks: ProgramMethodCallbacks) => {
-    if (!program || !provider || !participant || !battleground) return;
+    if (!program || !provider || !participant || !battleground || !battleRoyale) return;
 
     const playerNftTokenAccount = await getAssociatedTokenAddress(participant.nftMint, provider.publicKey, true);
 
@@ -86,7 +86,7 @@ export default function useParticipant(publicKey?: PublicKey) {
         .leaveBattleground()
         .accounts({
           signer: provider.publicKey,
-          battleRoyale: battleRoyale,
+          battleRoyale: battleRoyale.publicKey,
           battleground: battleground.publicKey,
           participant: participant.publicKey,
           nftMint: participant.nftMint,
@@ -94,7 +94,7 @@ export default function useParticipant(publicKey?: PublicKey) {
         })
         .rpc();
       await provider.connection.confirmTransaction(tx);
-      await fetchState();
+      setParticipant(undefined);
       callbacks?.onSuccess && callbacks.onSuccess();
     } catch (e) {
       callbacks?.onError && callbacks.onError(e);

@@ -40,3 +40,17 @@ export const isPartOfCollection = (metadata: Metadata, collection: CollectionInf
       .every((e) => collection.v1?.verifiedCreators.map((e) => e.toString()).includes(e));
   }
 };
+
+export const minHp = () => {
+  return 750 + 50 * 5;
+};
+
+export const maxHp = (defense: number) => {
+  return 750 + (50 + defense) * 5;
+};
+export const maxAttack = () => {
+  return 200;
+};
+export const maxDefense = () => {
+  return 150;
+};

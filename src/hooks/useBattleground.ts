@@ -94,7 +94,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
     if (!battleground) {
       fetchState();
     }
-  }, [battleground, publicKey, id]);
+  }, [battleground, publicKey, id, provider?.publicKey]);
 
   const fetchParticipants = async () => {
     if (!program || !battleground) return;
@@ -153,7 +153,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
           .accounts({
             signer: program.provider.publicKey,
             gameMaster,
-            battleRoyale,
+            battleRoyale: battleRoyale?.publicKey,
             authority: authorityAddress,
             battleground: battlegroundAddress,
             participant: participantAddress,
@@ -179,7 +179,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
 
   const startBattle = useCallback(
     async (callbacks: ProgramMethodCallbacks = {}) => {
-      if (!program || !provider || !battleground || !gameMaster) return;
+      if (!program || !provider || !battleground || !gameMaster || !battleRoyale) return;
 
       const [battlegroundAddress] = PublicKey.findProgramAddressSync(
         [BATTLEGROUND_STATE_SEEDS, new anchor.BN(battleground.id).toArrayLike(Buffer, "le", 8)],
@@ -190,7 +190,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
         const tx = await program.methods
           .startBattle()
           .accounts({
-            battleRoyale,
+            battleRoyale: battleRoyale.publicKey,
             battleground: battlegroundAddress,
             clock: SYSVAR_CLOCK_PUBKEY,
           })
@@ -207,7 +207,8 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
 
   const finishBattle = useCallback(
     async (callbacks: ProgramMethodCallbacks = {}) => {
-      if (!program || !provider || !battleground || !gameMaster) return;
+      console.log(battleRoyale, gameMaster, battleground);
+      if (!program || !provider || !battleground || !gameMaster || !battleRoyale) return;
 
       const winner = participants?.find((e) => e.alive);
       if (!winner) return;
@@ -233,7 +234,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
         const tx = await program.methods
           .finishBattle()
           .accounts({
-            battleRoyale: battleRoyale,
+            battleRoyale: battleRoyale.publicKey,
             battleground: battleground.publicKey,
             authority: authorityAddress,
             participant: participantAddress,

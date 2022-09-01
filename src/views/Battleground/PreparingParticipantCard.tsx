@@ -1,7 +1,8 @@
 import { Metadata } from "@metaplex-foundation/js";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { ProgramMethodCallbacks } from "../../hooks/useBattleground";
+import { BattlegroundAccount, ProgramMethodCallbacks } from "../../hooks/useBattleground";
+import useBattleRoyale from "../../hooks/useBattleRoyale";
 import useMetadata from "../../hooks/useMetadata";
 
 export default function PreparingParticipantCard({
@@ -21,6 +22,7 @@ export default function PreparingParticipantCard({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isInflight, setIsInflight] = useState<boolean>(false);
 
+  const { battleRoyale } = useBattleRoyale();
   const metadata = useMetadata(token.mintAddress);
 
   const handleSendToBattle = async () => {
@@ -45,7 +47,7 @@ export default function PreparingParticipantCard({
           <img src={metadata.json.image} alt="Profile picture" className="rounded-t-2xl" />
         </div>
       )}
-      <div className="flex flex-col gap-2 p-3 text-center">
+      <div className="flex flex-col gap-2 text-center">
         <span className="text-3xl font-bold">{token.name}</span>
         <span className="text-lg">{token.symbol}</span>
         <button className="btn btn-secondary" onClick={() => setIsOpen(true)}>
@@ -56,9 +58,9 @@ export default function PreparingParticipantCard({
             <label className="btn btn-sm btn-circle absolute right-2 top-2" onClick={() => setIsOpen(false)}>
               ✕
             </label>
-            <h3 className="text-xl font-bold">Send {} to the battleground</h3>
+            <h3 className="text-xl font-bold p-0">Send {} to the battleground</h3>
             <hr />
-            <div className="flex flex-col gap-2 my-2">
+            <div className="flex flex-col gap-2">
               <div className="w-full justify-start">
                 <span className="w-min font-bold">Characteristics</span>
                 <div className="flex flex-row gap-3 m-2">
@@ -74,6 +76,7 @@ export default function PreparingParticipantCard({
                   <span>Attack</span>
                 </div>
               </div>
+              <div>{(battleRoyale?.fee || 0) / 100}% of the ticket goes fund developments</div>
               <button className={`btn btn-primary ${isInflight ? "loading" : ""}`} onClick={() => handleSendToBattle()}>
                 Confirm
               </button>

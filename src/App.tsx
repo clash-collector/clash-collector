@@ -11,7 +11,6 @@ import {
   TokenaryWalletAdapter,
   TorusWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import { clusterApiUrl } from "@solana/web3.js";
 import React, { useMemo } from "react";
 import { HashRouter, Route, Routes } from "react-router-dom";
 
@@ -21,7 +20,6 @@ import Battleground from "./views/Battleground";
 import Home from "./views/Home";
 import Participant from "./views/Participant";
 
-import "@solana/wallet-adapter-react-ui/styles.css";
 import NftsView from "./views/NFTs";
 import { UserNftsProvider } from "./contexts/UserNfts";
 import { IS_MAINNET } from "./constants";

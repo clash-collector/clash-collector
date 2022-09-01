@@ -1,70 +1,61 @@
-import React, { Fragment } from "react"
-import { Popover, Transition } from '@headlessui/react'
-import {
-  ChartBarIcon,
-  MenuIcon,
-  SupportIcon,
-  XIcon,
-} from '@heroicons/react/outline'
-import { ChevronDownIcon } from '@heroicons/react/solid'
-import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
-import { APP_NAME } from '../constants'
-import logo from "../assets/logo.svg"
-import { Link } from "react-router-dom"
+import React, { Fragment } from "react";
+import { Popover, Transition } from "@headlessui/react";
+import { ChartBarIcon, MenuIcon, SupportIcon, XIcon } from "@heroicons/react/outline";
+import { ChevronDownIcon } from "@heroicons/react/solid";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { APP_NAME } from "../constants";
+import logo from "../assets/logo.svg";
+import { Link } from "react-router-dom";
 
 const battlegroundActions = [
   {
-    name: 'My NFTs',
-    description: 'View and manage your NFTs, send them to an open battleground, take actions in ones you\'re engaged in.',
-    href: '#/nfts',
+    name: "My NFTs",
+    description:
+      "View and manage your NFTs, send them to an open battleground, take actions in ones you're engaged in.",
+    href: "#/nfts",
     icon: ChartBarIcon,
   },
   {
-    name: 'Find a collection',
-    description: 'Look for a battleground that one of your token can participate in.',
-    href: '#',
+    name: "Find a collection",
+    description: "Look for a battleground that one of your token can participate in.",
+    href: "#",
     icon: ChartBarIcon,
   },
   {
-    name: 'Create a battleground',
-    description: 'Create a new permanent battleground for a given collection.',
-    href: '#',
+    name: "Create a battleground",
+    description: "Create a new permanent battleground for a given collection.",
+    href: "#",
     icon: ChartBarIcon,
   },
-]
+];
 const resources = [
   {
-    name: 'Github',
-    description:
-      'Repository containing the source code of the frontend and contracts',
-    href: '#',
+    name: "Github",
+    description: "Repository containing the source code of the frontend and contracts",
+    href: "#",
     icon: SupportIcon,
   },
   {
-    name: 'Discord',
-    href: '#',
+    name: "Discord",
+    href: "#",
     icon: SupportIcon,
   },
-]
+];
 
 function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export default function Navbar() {
   return (
     <Popover className="relative">
       <div className="w-100">
-        <div className="flex justify-between items-center border-b-2 py-6 md:justify-start md:space-x-10 px-4 sm:px-6">
+        <div className="flex justify-between items-center border-b-2 py-3 md:justify-start md:space-x-10 px-4 sm:px-6">
           <div className="flex justify-start lg:w-0 lg:flex-1">
             <a href="#">
               <div className="flex flex-row justify-center space-x-2">
-                <img
-                  className="h-8 w-auto sm:h-10"
-                  src={logo}
-                  alt=""
-                />
-                <span className="text-xl my-auto font-bold invisible md:visible">{APP_NAME}</span>
+                <img className="h-4 w-auto sm:h-10" src={logo} alt="" />
+                <span className="text-lg my-auto font-bold invisible md:visible">{APP_NAME}</span>
               </div>
             </a>
           </div>
@@ -75,20 +66,20 @@ export default function Navbar() {
             </Popover.Button>
           </div>
           <Popover.Group as="nav" className="hidden md:flex space-x-10">
-            <Popover className="relative">
+            <Popover className="relative text-lg">
               {({ open }: { open: boolean }) => (
                 <>
                   <Popover.Button
                     className={classNames(
-                      open ? 'text-gray-900 bg-brand-100' : 'text-gray-500',
-                      'p-3 text-xl group rounded-md inline-flex items-center font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500',
+                      open ? "text-gray-900 bg-brand-100" : "text-gray-500",
+                      "p-3 group rounded-md inline-flex items-center font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500"
                     )}
                   >
                     <span className="">Battlegrounds</span>
                     <ChevronDownIcon
                       className={classNames(
-                        open ? 'text-gray-600' : 'text-gray-400',
-                        'ml-2 h-5 w-5 group-hover:text-gray-500',
+                        open ? "text-gray-600" : "text-gray-400",
+                        "ml-2 h-5 w-5 group-hover:text-gray-500"
                       )}
                       aria-hidden="true"
                     />
@@ -112,17 +103,10 @@ export default function Navbar() {
                               href={item.href}
                               className="-m-3 p-3 flex items-start rounded-lg hover:bg-base-200"
                             >
-                              <item.icon
-                                className="flex-shrink-0 h-6 w-6 text-indigo-600"
-                                aria-hidden="true"
-                              />
+                              <item.icon className="flex-shrink-0 h-6 w-6 text-indigo-600" aria-hidden="true" />
                               <div className="ml-4">
-                                <p className="text-base font-medium text-gray-900">
-                                  {item.name}
-                                </p>
-                                <p className="mt-1 text-sm text-gray-500">
-                                  {item.description}
-                                </p>
+                                <p className="text-base font-medium text-gray-900">{item.name}</p>
+                                <p className="mt-1 text-sm text-gray-500">{item.description}</p>
                               </div>
                             </a>
                           ))}
@@ -133,10 +117,7 @@ export default function Navbar() {
                 </>
               )}
             </Popover>
-            <Link
-              to="/docs"
-              className="p-3 text-xl font-medium text-gray-500 hover:text-gray-900"
-            >
+            <Link to="/docs" className="p-3 text-xl font-medium text-gray-500 hover:text-gray-900">
               Docs
             </Link>
           </Popover.Group>
@@ -154,10 +135,7 @@ export default function Navbar() {
         leaveFrom="opacity-100 scale-100"
         leaveTo="opacity-0 scale-95"
       >
-        <Popover.Panel
-          focus
-          className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden"
-        >
+        <Popover.Panel focus className="absolute top-0 inset-x-0 p-2 transition transform origin-top-right md:hidden">
           <div className="rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 bg-white divide-y-2 divide-gray-50">
             <div className="pt-5 pb-6 px-5">
               <div className="flex items-center justify-between">
@@ -184,13 +162,8 @@ export default function Navbar() {
                       href={item.href}
                       className="-m-3 p-3 flex items-center rounded-md hover:bg-gray-50"
                     >
-                      <item.icon
-                        className="flex-shrink-0 h-6 w-6 text-indigo-600"
-                        aria-hidden="true"
-                      />
-                      <span className="ml-3 text-base font-medium text-gray-900">
-                        {item.name}
-                      </span>
+                      <item.icon className="flex-shrink-0 h-6 w-6 text-indigo-600" aria-hidden="true" />
+                      <span className="ml-3 text-base font-medium text-gray-900">{item.name}</span>
                     </a>
                   ))}
                 </nav>
@@ -198,10 +171,7 @@ export default function Navbar() {
             </div>
             <div className="py-6 px-5 space-y-6">
               <div className="grid grid-cols-2 gap-y-4 gap-x-8">
-                <a
-                  href="#"
-                  className="text-base font-medium text-gray-900 hover:text-gray-700"
-                >
+                <a href="#" className="text-base font-medium text-gray-900 hover:text-gray-700">
                   Docs
                 </a>
                 {resources.map((item) => (
@@ -222,5 +192,5 @@ export default function Navbar() {
         </Popover.Panel>
       </Transition>
     </Popover>
-  )
+  );
 }
