@@ -1,6 +1,6 @@
 import { ArrowLeftIcon } from "@heroicons/react/outline";
 import React, { useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import deepEqual from "deep-equal";
 import View from "../../components/View";
 import { collections } from "../../constants";
@@ -52,8 +52,6 @@ export default function Battleground() {
       },
     });
   };
-
-  console.log(battleground, userParticipants);
 
   return (
     <View>
