@@ -14,6 +14,7 @@ import React, { useMemo } from "react";
 
 import Battleground from "./views/Battleground";
 import Collection from "./views/Collection";
+import Documentation from "./views/Documentation";
 import Home from "./views/Home";
 import Navbar from "./components/Navbar";
 import NftsView from "./views/NFTs";
@@ -43,6 +44,7 @@ const Router = () => {
               <Route path=":participantId" element={<Participant />} />
             </Route>
             <Route path="/nfts" element={<NftsView />} />
+            <Route path="/docs" element={<Documentation />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Routes>

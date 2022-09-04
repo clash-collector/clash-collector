@@ -1,6 +1,6 @@
+import { APP_NAME } from "../constants";
 import React from "react";
 import View from "../components/View";
-import { APP_NAME } from "../constants";
 import logo from "../assets/logo.svg";
 import useUserNfts from "../hooks/useUserNfts";
 
