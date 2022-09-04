@@ -1,6 +1,7 @@
 import * as anchor from "@project-serum/anchor";
-import udderProfile from "../assets/collections/udderChaos/profile.png";
+
 import solPatrolProfile from "../assets/collections/solPatrol/profile.jpg";
+import udderProfile from "../assets/collections/udderChaos/profile.png";
 
 export interface CollectionInfo {
   v1?: {
@@ -28,7 +29,7 @@ export const testCollections: Collection[] = [
     name: "Sol Patrol",
     info: {
       v2: {
-        collectionMint: new anchor.web3.PublicKey("9Fg42aAFY1qUBiwNBKh3N7ERB5kHbL7HPWm4C4mD8AdV"),
+        collectionMint: new anchor.web3.PublicKey("4dE8KBi7nJh7UPUtMK1AF5YuH45YukFMyMaELDvsGqaJ"),
       },
     },
     website: "https://www.solpatrol.io/",

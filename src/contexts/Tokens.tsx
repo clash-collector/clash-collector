@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { TokenListProvider, TokenInfo } from "@solana/spl-token-registry";
+import { TokenInfo, TokenListProvider } from "@solana/spl-token-registry";
+
+import useNetwork from "../hooks/useNetwork";
 
 interface UserNftsContextProps {
   tokenMap?: Map<string, TokenInfo>;
@@ -12,12 +14,15 @@ export const TokensContext = React.createContext<UserNftsContextProps>({
 });
 
 export const TokensProvider = ({ children }: { children: React.ReactNode }) => {
+  const { slug } = useNetwork();
   const [tokenMap, setTokenMap] = useState<Map<string, TokenInfo>>(new Map());
   const [tokenNames, setTokenNames] = useState<Map<string, string>>(new Map());
 
+  console.log(slug);
+
   useEffect(() => {
     new TokenListProvider().resolve().then((tokens) => {
-      const tokenList = tokens.filterByClusterSlug("mainnet-beta").getList();
+      const tokenList = tokens.filterByClusterSlug(slug).getList();
 
       setTokenMap(
         tokenList.reduce((map, item) => {

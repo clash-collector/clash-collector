@@ -1,6 +1,3 @@
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
-import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import {
   CoinbaseWalletAdapter,
   GlowWalletAdapter,
@@ -11,20 +8,22 @@ import {
   TokenaryWalletAdapter,
   TorusWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
-import React, { useMemo } from "react";
+import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
 import { HashRouter, Route, Routes } from "react-router-dom";
+import React, { useMemo } from "react";
 
-import Navbar from "./components/Navbar";
-import Collection from "./views/Collection";
 import Battleground from "./views/Battleground";
+import Collection from "./views/Collection";
 import Home from "./views/Home";
-import Participant from "./views/Participant";
-
+import Navbar from "./components/Navbar";
 import NftsView from "./views/NFTs";
-import { UserNftsProvider } from "./contexts/UserNfts";
-import { IS_MAINNET } from "./constants";
+import Participant from "./views/Participant";
+import Settings from "./views/Settings";
 import { Toaster } from "react-hot-toast";
 import { TokensProvider } from "./contexts/Tokens";
+import { UserNftsProvider } from "./contexts/UserNfts";
+import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import useNetwork from "./hooks/useNetwork";
 
 const Router = () => {
   return (
@@ -45,6 +44,7 @@ const Router = () => {
               <Route path=":participantId" element={<Participant />} />
             </Route>
             <Route path="/nfts" element={<NftsView />} />
+            <Route path="/settings" element={<Settings />} />
           </Route>
         </Routes>
       </Providers>
@@ -53,12 +53,7 @@ const Router = () => {
 };
 
 const Providers: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
-  const network = WalletAdapterNetwork.Mainnet;
-
-  // You can also provide a custom RPC endpoint.
-  // const endpoint = useMemo(() => clusterApiUrl(network), [network]);
-  const endpoint = IS_MAINNET ? "https://ssc-dao.genesysgo.net" : "http://localhost:8899";
+  const { endpoint } = useNetwork();
 
   const wallets = useMemo(
     () => [

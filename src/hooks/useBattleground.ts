@@ -1,17 +1,19 @@
-import { Metadata } from "@metaplex-foundation/js";
 import * as anchor from "@project-serum/anchor";
-import { BN, IdlAccounts, Program } from "@project-serum/anchor";
-import { getAccount, getAssociatedTokenAddress, getMint } from "@solana/spl-token";
-import { PublicKey, SYSVAR_CLOCK_PUBKEY } from "@solana/web3.js";
-import { useCallback, useEffect, useMemo, useState } from "react";
+
 import {
-  BattleRoyaleProgram,
-  BattleRoyaleIdl,
-  BATTLE_ROYALE_PROGRAM_ID,
-  BATTLEGROUND_STATE_SEEDS,
   BATTLEGROUND_AUTHORITY_SEEDS,
+  BATTLEGROUND_STATE_SEEDS,
+  BATTLE_ROYALE_PROGRAM_ID,
+  BattleRoyaleIdl,
+  BattleRoyaleProgram,
   PARTICIPANT_STATE_SEEDS,
 } from "../programs/battleRoyale";
+import { IdlAccounts, Program } from "@project-serum/anchor";
+import { PublicKey, SYSVAR_CLOCK_PUBKEY } from "@solana/web3.js";
+import { getAccount, getAssociatedTokenAddress, getMint } from "@solana/spl-token";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+import { Metadata } from "@metaplex-foundation/js";
 import { getTokenMetadata } from "../utils";
 import useBattleRoyale from "./useBattleRoyale";
 import useProvider from "./useProvider";

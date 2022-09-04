@@ -1,30 +1,25 @@
-import { useLocalStorage } from "@solana/wallet-adapter-react";
 import { APP_NAME } from "../constants";
+import useLocalStorage from "./useLocalStorage";
 
-export enum Networks {
-  Mainnet,
-  Testnet,
-  Localnet,
+type Networks = "Mainnet (beta)" | "Testnet" | "Localnet";
+interface Network {
+  endpoint: string;
+  name: Networks;
+  slug: string;
 }
 
+const networks: Network[] = [
+  { endpoint: "https://try-rpc.mainnet.solana.blockdaemon.tech", name: "Mainnet (beta)", slug: "mainnet-beta" },
+  { endpoint: "http://api.testnet.solana.com", name: "Testnet", slug: "testnet" },
+  { endpoint: "http://localhost:8899", name: "Localnet", slug: "mainnet-beta" },
+];
+
 export default function useNetwork() {
-  const [network, setNetwork] = useLocalStorage(`${APP_NAME}_network`, Networks.Mainnet);
+  const [network, setNetwork] = useLocalStorage(`${APP_NAME}_network`, networks[0]);
 
-  let endpoint: string;
-  switch (network) {
-    case Networks.Mainnet:
-      endpoint = "http://api.mainnet-beta.solana.com";
-      break;
-    case Networks.Testnet:
-      endpoint = "http://api.testnet.solana.com";
-      break;
-    case Networks.Localnet:
-      endpoint = "http://localhost:8899";
-      break;
-    default:
-      endpoint = "http://api.mainnet-beta.solana.com";
-      break;
-  }
+  const changeNetwork = (networkName: Networks) => {
+    setNetwork(networks.find((e) => e.name === networkName) || networks[0]);
+  };
 
-  return { endpoint, network, setNetwork };
+  return { ...network, changeNetwork, networks };
 }

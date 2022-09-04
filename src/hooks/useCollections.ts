@@ -1,8 +1,9 @@
-import { testCollections, mainnetCollections } from "../constants/collections";
-import useNetwork, { Networks } from "./useNetwork";
+import { mainnetCollections, testCollections } from "../constants/collections";
+
+import useNetwork from "./useNetwork";
 
 export default function useCollections() {
-  const { network } = useNetwork();
+  const { name } = useNetwork();
 
-  return network === Networks.Mainnet ? mainnetCollections : testCollections;
+  return name === "Mainnet (beta)" ? mainnetCollections : testCollections;
 }

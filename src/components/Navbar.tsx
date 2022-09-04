@@ -1,11 +1,12 @@
-import React, { Fragment } from "react";
-import { Popover, Transition } from "@headlessui/react";
 import { ChartBarIcon, MenuIcon, SupportIcon, XIcon } from "@heroicons/react/outline";
-import { ChevronDownIcon } from "@heroicons/react/solid";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { Popover, Transition } from "@headlessui/react";
+import React, { Fragment } from "react";
+
 import { APP_NAME } from "../constants";
-import logo from "../assets/logo.svg";
+import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Link } from "react-router-dom";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import logo from "../assets/logo.svg";
 
 const battlegroundActions = [
   {
@@ -60,7 +61,7 @@ export default function Navbar() {
             </a>
           </div>
           <div className="-mr-2 -my-2 md:hidden">
-            <Popover.Button className="rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+            <Popover.Button className="rounded-md p-2 inline-flex items-center justify-center text-primary-400 hover:text-primary-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
               <span className="sr-only">Open menu</span>
               <MenuIcon className="h-6 w-6" aria-hidden="true" />
             </Popover.Button>
@@ -119,6 +120,9 @@ export default function Navbar() {
             </Popover>
             <Link to="/docs" className="p-3 text-xl font-medium text-gray-500 hover:text-gray-900">
               Docs
+            </Link>
+            <Link to="/settings" className="p-3 text-xl font-medium text-gray-500 hover:text-gray-900">
+              Settings
             </Link>
           </Popover.Group>
           <div className="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
