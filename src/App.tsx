@@ -29,7 +29,6 @@ const Router = () => {
   return (
     <HashRouter>
       <Providers>
-        <Navbar />
         <Toaster toastOptions={{ className: "", duration: 8000 }} />
         <Routes>
           <Route path="/">
