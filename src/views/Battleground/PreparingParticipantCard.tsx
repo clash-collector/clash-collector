@@ -47,8 +47,8 @@ export default function PreparingParticipantCard({
           <img src={metadata.json.image} alt="Profile picture" className="rounded-t-2xl" />
         </div>
       )}
-      <div className="flex flex-col gap-2 text-center">
-        <span className="text-3xl font-bold">{token.name}</span>
+      <div className="flex flex-col gap-2 p-3 text-center">
+        <span className="text-xl font-bold">{token.name}</span>
         <span className="text-lg">{token.symbol}</span>
         <button className="btn btn-secondary" onClick={() => setIsOpen(true)}>
           Send to battle
@@ -58,7 +58,7 @@ export default function PreparingParticipantCard({
             <label className="btn btn-sm btn-circle absolute right-2 top-2" onClick={() => setIsOpen(false)}>
               ✕
             </label>
-            <h3 className="text-xl font-bold p-0">Send {} to the battleground</h3>
+            <h3 className="text-xl font-bold p-0 m-1 ">Send {token.name} to the battleground</h3>
             <hr />
             <div className="flex flex-col gap-2">
               <div className="w-full justify-start">
@@ -77,8 +77,8 @@ export default function PreparingParticipantCard({
                 </div>
               </div>
               <div>{(battleRoyale?.fee || 0) / 100}% of the ticket goes fund developments</div>
-              <button className={`btn btn-primary ${isInflight ? "loading" : ""}`} onClick={() => handleSendToBattle()}>
-                Confirm
+              <button className={`btn btn-success ${isInflight ? "loading" : ""}`} onClick={() => handleSendToBattle()}>
+                Buy ticket
               </button>
             </div>
           </label>

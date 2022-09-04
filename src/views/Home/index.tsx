@@ -1,11 +1,14 @@
-import React from "react";
-import View from "../../components/View";
-import { APP_NAME, collections } from "../../constants";
-import logo from "../../assets/logo.svg";
+import { APP_NAME } from "../../constants";
 import CollectionCard from "./CollectionCard";
 import Hero from "../../components/Hero";
+import React from "react";
+import View from "../../components/View";
+import logo from "../../assets/logo.svg";
+import useCollections from "../../hooks/useCollections";
 
 export default function Home() {
+  const collections = useCollections();
+
   return (
     <View>
       <Hero

@@ -3,15 +3,16 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Hero from "../../components/Hero";
 import View from "../../components/View";
-import { collections } from "../../constants";
 import { BattlegroundAccount } from "../../hooks/useBattleground";
 import useBattleRoyale from "../../hooks/useBattleRoyale";
+import useCollections from "../../hooks/useCollections";
 import useProvider from "../../hooks/useProvider";
 import BattlegroundCard from "./BattlegroundCard";
 import CreateBattlegroundModal from "./CreateBattlegroundModal";
 
 export default function Collection() {
   let { collectionId } = useParams();
+  const collections = useCollections();
   const collection = collections.find((e) => e.id === collectionId);
   const provider = useProvider();
   const { gameMaster, fetchBattlegroundsByCollection } = useBattleRoyale();

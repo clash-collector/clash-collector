@@ -1,11 +1,11 @@
 import React from "react";
 import View from "../components/View";
-import { APP_NAME, collections } from "../constants";
+import { APP_NAME } from "../constants";
 import logo from "../assets/logo.svg";
 import useUserNfts from "../hooks/useUserNfts";
 
 export default function NftsView() {
-  const tokens = useUserNfts();
+  const { tokens } = useUserNfts();
   return (
     <View>
       <div className="flex flex-col align-center text-center p-5 bg-gray-100 rounded-2xl max-w-4xl mx-auto">
@@ -22,7 +22,10 @@ export default function NftsView() {
           {tokens ? (
             tokens.length > 0 ? (
               tokens.map((e) => (
-                <div key={e.key.toString()} className="card w-96 border-2 border-base-200 bg-base-100 shadow-xl m-3">
+                <div
+                  key={e.mintAddress.toString()}
+                  className="card w-96 border-2 border-base-200 bg-base-100 shadow-xl m-3"
+                >
                   <span className="justify-center m-auto p-4">Image should be here</span>
                   <div className="card-body">
                     <span className="text-xl font-bold m-auto">{e.name}</span>

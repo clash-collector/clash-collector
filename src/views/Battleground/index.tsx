@@ -1,20 +1,21 @@
-import { ArrowLeftIcon } from "@heroicons/react/outline";
 import React, { useMemo, useState } from "react";
-import { useParams } from "react-router-dom";
-import deepEqual from "deep-equal";
-import View from "../../components/View";
-import { collections } from "../../constants";
-import useBattleground from "../../hooks/useBattleground";
-import useUserNfts from "../../hooks/useUserNfts";
+
 import FightingParticipantCard from "./FightingParticipantCard";
-import PreparingParticipantCard from "./PreparingParticipantCard";
-import toast from "react-hot-toast";
-import TokenIcon from "../../components/TokenIcon";
-import { isPartOfCollection } from "../../utils";
 import Hero from "../../components/Hero";
+import PreparingParticipantCard from "./PreparingParticipantCard";
+import TokenIcon from "../../components/TokenIcon";
+import View from "../../components/View";
+import deepEqual from "deep-equal";
+import { isPartOfCollection } from "../../utils";
+import toast from "react-hot-toast";
+import useBattleground from "../../hooks/useBattleground";
+import useCollections from "../../hooks/useCollections";
+import { useParams } from "react-router-dom";
+import useUserNfts from "../../hooks/useUserNfts";
 
 export default function Battleground() {
   let { battlegroundId } = useParams();
+  const collections = useCollections();
   const { battleground, startBattle, joinBattleground, finishBattle } = useBattleground({ id: Number(battlegroundId) });
   const parentCollection = collections.find((e) => deepEqual(e.info, battleground?.collectionInfo));
   const { tokens, userParticipants, fetchUserParticipants } = useUserNfts();
