@@ -16,13 +16,12 @@ import Battleground from "./views/Battleground";
 import Collection from "./views/Collection";
 import Documentation from "./views/Documentation";
 import Home from "./views/Home";
-import Navbar from "./components/Navbar";
-import NftsView from "./views/NFTs";
 import Participant from "./views/Participant";
 import Settings from "./views/Settings";
 import { Toaster } from "react-hot-toast";
 import { TokensProvider } from "./contexts/Tokens";
 import { UserNftsProvider } from "./contexts/UserNfts";
+import UserParticipants from "./views/UserParticipants";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
 import useNetwork from "./hooks/useNetwork";
 
@@ -43,7 +42,7 @@ const Router = () => {
             <Route path="participant">
               <Route path=":participantId" element={<Participant />} />
             </Route>
-            <Route path="/nfts" element={<NftsView />} />
+            <Route path="/nfts" element={<UserParticipants />} />
             <Route path="/docs" element={<Documentation />} />
             <Route path="/settings" element={<Settings />} />
           </Route>

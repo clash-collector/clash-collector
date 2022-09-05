@@ -19,7 +19,7 @@ const battlegroundActions = [
   {
     name: "Browse collections",
     description: "Look for battlegrounds of a specific collection.",
-    href: "#/collections",
+    href: "#/",
     icon: ViewListIcon,
   },
 ];

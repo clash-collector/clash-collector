@@ -8,7 +8,7 @@ export default function View({ children }: { children: React.ReactNode }) {
         <Navbar />
       </div>
       <div className="justify-center">
-        <div className="p-3 mx-auto max-w-7xl pt-20">{children}</div>
+        <div className="p-3 pt-20 mx-auto max-w-7xl md:pt-3">{children}</div>
       </div>
     </div>
   );
