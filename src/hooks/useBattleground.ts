@@ -126,7 +126,8 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
       token: Metadata,
       attack: number,
       defense: number,
-      whitelistProof: number[][] | null = null,
+      collectionWhitelistProof: number[][] | null = null,
+      holderWhitelistProof: number[][] | null = null,
       callbacks: ProgramMethodCallbacks = {}
     ) => {
       if (!program || !provider || !battleground || !gameMaster) return;
@@ -151,7 +152,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
 
       try {
         const tx = await program.methods
-          .joinBattleground(attack, defense, whitelistProof)
+          .joinBattleground(attack, defense, collectionWhitelistProof, holderWhitelistProof)
           .accounts({
             signer: program.provider.publicKey,
             gameMaster,

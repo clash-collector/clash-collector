@@ -1,15 +1,16 @@
+import {
+  BATTLEGROUND_AUTHORITY_SEEDS,
+  BATTLE_ROYALE_PROGRAM_ID,
+  BattleRoyaleIdl,
+  BattleRoyaleProgram,
+} from "../programs/battleRoyale";
 import { BN, IdlAccounts, Program } from "@project-serum/anchor";
 import { getAccount, getAssociatedTokenAddress, getMint } from "@solana/spl-token";
-import { PublicKey } from "@solana/web3.js";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Collection } from "../constants/collections";
-import {
-  BattleRoyaleProgram,
-  BattleRoyaleIdl,
-  BATTLE_ROYALE_PROGRAM_ID,
-  BATTLEGROUND_AUTHORITY_SEEDS,
-} from "../programs/battleRoyale";
+
 import { BattlegroundAccount } from "./useBattleground";
+import { Collection } from "../constants/collections";
+import { PublicKey } from "@solana/web3.js";
 import useProvider from "./useProvider";
 
 export declare type BaseBattleRoyaleAccount = IdlAccounts<BattleRoyaleProgram>["battleRoyaleState"];
@@ -96,7 +97,8 @@ export default function useBattleRoyale() {
       ticketToken: PublicKey,
       ticketCost: number,
       participantsCap: number,
-      pointsPerDay: number
+      pointsPerDay: number,
+      holderWhitelistProof: number[][] | null = null
     ) => {
       if (!program) return;
 
@@ -107,7 +109,8 @@ export default function useBattleRoyale() {
           collection.info as any,
           participantsCap,
           new BN(ticketCost * 10 ** mint.decimals),
-          pointsPerDay
+          pointsPerDay,
+          holderWhitelistProof
         )
         .accounts({
           signer: program.provider.publicKey,

@@ -158,6 +158,14 @@ export type BattleRoyaleProgram = {
         {
           name: "actionPointsPerDay";
           type: "u32";
+        },
+        {
+          name: "whitelistRoot";
+          type: {
+            option: {
+              array: ["u8", 32];
+            };
+          };
         }
       ];
     },
@@ -330,7 +338,17 @@ export type BattleRoyaleProgram = {
           type: "u32";
         },
         {
-          name: "whitelistRoot";
+          name: "collectionWhitelistRoot";
+          type: {
+            option: {
+              vec: {
+                array: ["u8", 32];
+              };
+            };
+          };
+        },
+        {
+          name: "holderWhitelistRoot";
           type: {
             option: {
               vec: {
@@ -812,6 +830,14 @@ export type BattleRoyaleProgram = {
             type: {
               option: "publicKey";
             };
+          },
+          {
+            name: "whitelistRoot";
+            type: {
+              option: {
+                array: ["u8", 32];
+              };
+            };
           }
         ];
       };
@@ -1237,6 +1263,14 @@ export const IDL: BattleRoyaleProgram = {
           name: "actionPointsPerDay",
           type: "u32",
         },
+        {
+          name: "whitelistRoot",
+          type: {
+            option: {
+              array: ["u8", 32],
+            },
+          },
+        },
       ],
     },
     {
@@ -1408,7 +1442,17 @@ export const IDL: BattleRoyaleProgram = {
           type: "u32",
         },
         {
-          name: "whitelistRoot",
+          name: "collectionWhitelistRoot",
+          type: {
+            option: {
+              vec: {
+                array: ["u8", 32],
+              },
+            },
+          },
+        },
+        {
+          name: "holderWhitelistRoot",
           type: {
             option: {
               vec: {
@@ -1889,6 +1933,14 @@ export const IDL: BattleRoyaleProgram = {
             name: "lastWinner",
             type: {
               option: "publicKey",
+            },
+          },
+          {
+            name: "whitelistRoot",
+            type: {
+              option: {
+                array: ["u8", 32],
+              },
             },
           },
         ],

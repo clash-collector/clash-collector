@@ -1,4 +1,12 @@
-import { ClipboardCopyIcon, DatabaseIcon, MenuIcon, SupportIcon, ViewListIcon, XIcon } from "@heroicons/react/outline";
+import {
+  AdjustmentsIcon,
+  ClipboardCopyIcon,
+  DatabaseIcon,
+  MenuIcon,
+  SupportIcon,
+  ViewListIcon,
+  XIcon,
+} from "@heroicons/react/outline";
 import { Popover, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
 
@@ -7,6 +15,7 @@ import { ChevronDownIcon } from "@heroicons/react/solid";
 import { Link } from "react-router-dom";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import logo from "../assets/logo.svg";
+import { useState } from "react";
 
 const battlegroundActions = [
   {
@@ -19,7 +28,7 @@ const battlegroundActions = [
   {
     name: "Browse collections",
     description: "Look for battlegrounds of a specific collection.",
-    href: "#/",
+    href: "#/collections",
     icon: ViewListIcon,
   },
 ];
@@ -29,6 +38,12 @@ const resources = [
     description: "Official Documentation",
     href: "#/docs",
     icon: DatabaseIcon,
+  },
+  {
+    name: "Settings",
+    description: "Settings for the Clash Collectors App",
+    href: "#/settings",
+    icon: AdjustmentsIcon,
   },
   {
     name: "Github",
@@ -60,77 +75,75 @@ function Logo({ text }: { text?: boolean }) {
 
 function Mobile() {
   return (
-    <div className="drawer absolute">
-      <input id="nav-drawer" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content h-min">
-        <div className="flex justify-between p-2 border-b">
-          <Logo />
-          <label
-            htmlFor="nav-drawer"
-            className="btn-outline rounded-md p-2 inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
+    <Popover className="absolute text-lg">
+      {({ open }: { open: boolean }) => (
+        <div className="h-fit">
+          <div className="flex justify-between p-3 border-b w-screen">
+            <Logo />
+            <Popover.Button className={"btn btn-outline p-3 rounded-md"}>
+              <span className="sr-only">Open menu</span>
+              <MenuIcon className="h-6 w-6" aria-hidden="true" />
+            </Popover.Button>
+          </div>
+          <Transition
+            as={Fragment}
+            enter="transition ease-out duration-200"
+            enterFrom="translate-y-1"
+            enterTo="translate-y-0"
+            leave="transition ease-in duration-150"
+            leaveFrom="translate-y-0"
+            leaveTo="translate-y-1"
           >
-            <span className="sr-only">Open menu</span>
-            <MenuIcon className="h-6 w-6" aria-hidden="true" />
-          </label>
-        </div>
-      </div>
-      <div className="drawer-side">
-        <label htmlFor="nav-drawer" className="drawer-overlay"></label>
-        <div className="relative rounded-lg shadow-lg ring-opacity-5 bg-base-100 divide-y">
-          <div className="pt-5 pb-6 px-5">
-            <div className="flex items-center justify-between">
-              <Logo text />
-              <div className="-mr-2">
-                <label
-                  htmlFor="nav-drawer"
-                  className="btn btn-outline rounded-md inline-flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-inset"
-                >
-                  <span className="sr-only">Close menu</span>
-                  <XIcon className="h-5 w-5" aria-hidden="true" />
-                </label>
-              </div>
-            </div>
-            <div className="mt-6">
-              <div className="grid gap-y-2">
-                {battlegroundActions.map((item) => (
-                  <a key={item.name} href={item.href}>
-                    <div className="flex flex-row p-2 text-primary-content rounded-box bg-primary hover:bg-primary-focus">
-                      <item.icon className="flex-shrink-0 h-6 w-6 my-auto" aria-hidden="true" />
-                      <div className="ml-3 font-medium my-auto">{item.name}</div>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div className="py-6 px-5 space-y-6">
-            <div className="grid gap-y-2">
-              {resources.map((item) => (
-                <a key={item.name} href={item.href}>
-                  <div className="flex flex-row p-2 text-primary-content rounded-box bg-primary hover:bg-primary-focus">
-                    <item.icon className="my-auto w-5 h-5" aria-hidden="true" />
-                    <div className="my-auto">{item.name}</div>
+            <Popover.Panel className="fixed top-0 bg-base-100 border rounded-box z-10 -ml-2 transform px-2 w-screen max-w-md sm:px-0 lg:ml-0 lg:left-1/2 lg:-translate-x-1/2">
+              <div className="relative h-screen rounded-lg shadow-lg ring-opacity-5 bg-base-100 divide-y">
+                <div className="pt-3 pb-6 px-5">
+                  <div className="flex items-center justify-between">
+                    <Logo text />
                   </div>
-                </a>
-              ))}
-            </div>
-          </div>
-          <div>
-            <WalletMultiButton className="rounded-xl" />
-          </div>
+                  <div className="mt-6">
+                    <div className="grid gap-y-2">
+                      {battlegroundActions.map((item) => (
+                        <a key={item.name} href={item.href}>
+                          <div className="flex flex-row p-2 rounded-box bg-primary hover:bg-primary-focus">
+                            <item.icon className="flex-shrink-0 h-6 w-6 my-auto" aria-hidden="true" />
+                            <div className="ml-3 font-medium my-auto">{item.name}</div>
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="py-6 px-5 space-y-6">
+                  <div className="grid gap-y-2">
+                    {resources.map((item) => (
+                      <a key={item.name} href={item.href}>
+                        <div className="flex flex-row p-2 rounded-box bg-primary hover:bg-primary-focus">
+                          <item.icon className="my-auto w-5 h-5" aria-hidden="true" />
+                          <div className="my-auto">{item.name}</div>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+                <div className="p-3">
+                  <WalletMultiButton className="rounded-xl ml-2" />
+                </div>
+              </div>
+            </Popover.Panel>
+          </Transition>
         </div>
-      </div>
-    </div>
+      )}
+    </Popover>
   );
 }
 
 export default function Navbar() {
   return (
     <div className="w-100">
-      <div className="md:hidden">
+      <div className="md:hidden absolute">
         <Mobile />
       </div>
-      <div className="hidden md:flex space-x-10">
+      <div className="hidden absolute md:flex space-x-10 w-screen">
         <div className="flex w-full justify-between items-center border-b py-3 bg-primary-200 md:justify-start md:space-x-10 px-4 sm:px-6">
           <div className="flex justify-start lg:w-0 lg:flex-1">
             <Logo />
@@ -168,7 +181,7 @@ export default function Navbar() {
                           >
                             <item.icon className="flex-shrink-0 h-6 w-6 text-indigo-600" aria-hidden="true" />
                             <div className="ml-4">
-                              <p className="text-base font-medium text-primary">{item.name}</p>
+                              <p className="text-base font-medium">{item.name}</p>
                               <p className="mt-1 text-sm">{item.description}</p>
                             </div>
                           </a>

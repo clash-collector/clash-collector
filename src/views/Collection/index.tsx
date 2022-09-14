@@ -1,19 +1,46 @@
-import { RefreshIcon, PlusIcon } from "@heroicons/react/outline";
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import Hero from "../../components/Hero";
-import View from "../../components/View";
+import { PlusIcon, RefreshIcon } from "@heroicons/react/outline";
+import React, { useEffect, useMemo, useState } from "react";
+
 import { BattlegroundAccount } from "../../hooks/useBattleground";
-import useBattleRoyale from "../../hooks/useBattleRoyale";
-import useCollections from "../../hooks/useCollections";
-import useProvider from "../../hooks/useProvider";
 import BattlegroundCard from "./BattlegroundCard";
 import CreateBattlegroundModal from "./CreateBattlegroundModal";
+import Hero from "../../components/Hero";
+import { Metaplex } from "@metaplex-foundation/js";
+import { PublicKey } from "@solana/web3.js";
+import View from "../../components/View";
+import useBattleRoyale from "../../hooks/useBattleRoyale";
+import useCollections from "../../hooks/useCollections";
+import { useConnection } from "@solana/wallet-adapter-react";
+import { useParams } from "react-router-dom";
+import useProvider from "../../hooks/useProvider";
+import useRisk from "../../hooks/useRisk";
+import { Collection } from "../../constants/collections";
 
 export default function Collection() {
-  let { collectionId } = useParams();
+  const { risk } = useRisk();
+  const { connection } = useConnection();
+  let { collectionQueryString } = useParams();
   const collections = useCollections();
-  const collection = collections.find((e) => e.id === collectionId);
+  const [collection, setCollection] = useState<Collection>();
+
+  console.log(collection, collectionQueryString);
+
+  const fetchCollection = async () => {
+    if (!collectionQueryString) return;
+
+    let collection = collections.find((e) => e.id === collectionQueryString);
+    if (collection) {
+      setCollection(collection);
+    } else {
+      const key = new PublicKey(collectionQueryString);
+      setCollection(await new Metaplex(connection).nfts().findByMint(key).run());
+    }
+  };
+
+  useEffect(() => {
+    if (!collection) fetchCollection();
+  }, [collectionQueryString, collections]);
+
   const provider = useProvider();
   const { gameMaster, fetchBattlegroundsByCollection } = useBattleRoyale();
   const [battlegrounds, setBattlegrounds] = useState<BattlegroundAccount[]>();
@@ -33,13 +60,13 @@ export default function Collection() {
       <Hero
         image={<img src={collection?.profile} className="logo w-48 h-48 mx-auto rounded-full" alt={collection?.name} />}
         title={collection?.name}
-        backLink={{ uri: "/", tooltip: "Go back to all collections" }}
+        backLink={{ uri: "/collections", tooltip: "Go back to all collections" }}
       />
       <div className="mt-10">
         <div className="flex flex-row justify-between">
           <span className="text-xl my-auto">Battlegrounds</span>
           <div>
-            {collection && provider?.publicKey && gameMaster?.equals(provider.publicKey) && (
+            {risk && collection && provider?.publicKey && gameMaster?.equals(provider.publicKey) && (
               <>
                 <CreateBattlegroundModal collection={collection} isOpen={isOpen} onClose={() => setIsOpen(false)} />
                 <div className="btn btn-outline m-2" onClick={() => setIsOpen(true)}>

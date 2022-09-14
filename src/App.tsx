@@ -14,6 +14,7 @@ import React, { useMemo } from "react";
 
 import Battleground from "./views/Battleground";
 import Collection from "./views/Collection";
+import Collections from "./views/Collections";
 import Documentation from "./views/Documentation";
 import Home from "./views/Home";
 import Participant from "./views/Participant";
@@ -33,8 +34,9 @@ const Router = () => {
         <Routes>
           <Route path="/">
             <Route index element={<Home />} />
+            <Route path="collections" element={<Collections />} />
             <Route path="collection">
-              <Route path=":collectionId" element={<Collection />} />
+              <Route path=":collectionQueryString" element={<Collection />} />
             </Route>
             <Route path="battleground">
               <Route path=":battlegroundId" element={<Battleground />} />
