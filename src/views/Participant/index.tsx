@@ -1,13 +1,15 @@
+import { Link, useParams } from "react-router-dom";
+
 import { ArrowLeftIcon } from "@heroicons/react/outline";
+import Hero from "../../components/Hero";
+import ParticipantStatistics from "../../components/ParticipantStatistics";
 import { PublicKey } from "@solana/web3.js";
 import React from "react";
-import { Link, useParams } from "react-router-dom";
-import Hero from "../../components/Hero";
+import TargetCard from "./TargetCard";
 import View from "../../components/View";
+import { shortAddress } from "../../utils";
 import useMetadata from "../../hooks/useMetadata";
 import useParticipant from "../../hooks/useParticipant";
-import { shortAddress } from "../../utils";
-import TargetCard from "./TargetCard";
 
 export default function Participant() {
   let { participantId } = useParams();
@@ -35,23 +37,7 @@ export default function Participant() {
             }
             content={
               <>
-                <div className="stats shadow mt-5 flex flex-row overflow-x-hidden">
-                  <div className="stat">
-                    <div className="stat-title">Attack</div>
-                    <div className="stat-value">{participant.attack}</div>
-                    <div className="stat-desc">Influences how much damage you deal.</div>
-                  </div>
-                  <div className="stat">
-                    <div className="stat-title">Defense</div>
-                    <div className="stat-value">{participant.defense}</div>
-                    <div className="stat-desc">Influences how much you heal.</div>
-                  </div>
-                  <div className="stat">
-                    <div className="stat-title">Health Points</div>
-                    <div className="stat-value">{participant.healthPoints}</div>
-                    <div className="stat-desc">You are eliminated when it reaches 0.</div>
-                  </div>
-                </div>
+                <ParticipantStatistics participant={participant} detailed />
                 {battleground && participant.alive && battleground?.participants === 1 && (
                   <div className="tooltip" data-tip={`Go back to battleground ${battleground.id}`}>
                     <Link to={`/battleground/${battleground.id}`}>

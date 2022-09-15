@@ -1,7 +1,8 @@
-import { Metadata } from "@metaplex-foundation/js";
 import React, { useState } from "react";
+
+import { Metadata } from "@metaplex-foundation/js";
+import { ProgramMethodCallbacks } from "../../hooks/useBattleground";
 import toast from "react-hot-toast";
-import { BattlegroundAccount, ProgramMethodCallbacks } from "../../hooks/useBattleground";
 import useBattleRoyale from "../../hooks/useBattleRoyale";
 import useMetadata from "../../hooks/useMetadata";
 
@@ -14,7 +15,8 @@ export default function PreparingParticipantCard({
     token: Metadata,
     attack: number,
     defense: number,
-    whitelistProof?: number[][] | null,
+    collectionWhitelistProof?: number[][] | null,
+    holderWhitelistProof?: number[][] | null,
     callbacks?: ProgramMethodCallbacks
   ) => Promise<void>;
 }) {
@@ -27,7 +29,7 @@ export default function PreparingParticipantCard({
 
   const handleSendToBattle = async () => {
     setIsInflight(true);
-    await joinBattleground(token, characteristics, 100 - characteristics, null, {
+    await joinBattleground(token, characteristics, 100 - characteristics, null, null, {
       onSuccess: () => {
         toast.success(`Token ${token.name} entered the battleground`);
       },

@@ -126,7 +126,7 @@ function Mobile() {
                   </div>
                 </div>
                 <div className="p-3">
-                  <WalletMultiButton className="rounded-xl ml-2" />
+                  <WalletMultiButton className="rounded-xl ml-2 bg-primary text-primary-content hover:bg-primary-focus" />
                 </div>
               </div>
             </Popover.Panel>
