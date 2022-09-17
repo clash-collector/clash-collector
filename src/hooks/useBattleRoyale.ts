@@ -11,6 +11,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { BattlegroundAccount } from "./useBattleground";
 import { Collection } from "../constants/collections";
 import { PublicKey } from "@solana/web3.js";
+import { formatBN } from "../utils";
 import useProvider from "./useProvider";
 
 export declare type BaseBattleRoyaleAccount = IdlAccounts<BattleRoyaleProgram>["battleRoyaleState"];
@@ -73,7 +74,7 @@ export default function useBattleRoyale() {
             totalFee: e.account.creatorFee + battleRoyale.fee,
             publicKey: e.publicKey,
             potValue,
-            ticketPrice: new BN(e.account.entryFee.toString()).toNumber() / new BN(10 ** mint.decimals).toNumber(),
+            ticketPrice: formatBN(e.account.entryFee, mint.decimals),
           };
         })
       )) as any;
@@ -111,7 +112,7 @@ export default function useBattleRoyale() {
         .createBattleground(
           collection.info as any,
           participantsCap,
-          new BN(ticketCost * 10 ** mint.decimals),
+          new BN(ticketCost).mul(new BN(10 ** mint.decimals)),
           creator,
           creatorFee,
           pointsPerDay,

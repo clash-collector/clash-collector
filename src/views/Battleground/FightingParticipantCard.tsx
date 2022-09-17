@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { BattlegroundAccount, ParticipantAccount, ProgramMethodCallbacks } from "../../hooks/useBattleground";
-import ParticipantStatistics from "../../components/ParticipantStatistics";
-import useMetadata from "../../hooks/useMetadata";
+import React, { useEffect, useState } from "react";
 import { shortAddress, spendableActionPoints } from "../../utils";
 
+import { Link } from "react-router-dom";
+import ParticipantStatistics from "../../components/ParticipantStatistics";
 import skullSvg from "../../assets/skull.svg";
 import toast from "react-hot-toast";
+import useMetadata from "../../hooks/useMetadata";
 import useParticipant from "../../hooks/useParticipant";
 
 export default function FightingParticipantCard({
@@ -39,6 +39,8 @@ export default function FightingParticipantCard({
     });
     setIsInflight(false);
   };
+
+  console.log(participant);
 
   return (
     <div className="rounded-2xl border-2 w-48 m-5">

@@ -158,6 +158,7 @@ export default function Battleground() {
                     <PreparingParticipantCard
                       key={token.mintAddress.toString()}
                       token={token}
+                      battleground={battleground}
                       joinBattleground={joinBattleground}
                     />
                   ))}

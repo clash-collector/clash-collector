@@ -10,11 +10,11 @@ import {
 } from "../programs/battleRoyale";
 import { IdlAccounts, Program } from "@project-serum/anchor";
 import { PublicKey, SYSVAR_CLOCK_PUBKEY } from "@solana/web3.js";
+import { formatBN, getTokenMetadata } from "../utils";
 import { getAccount, getAssociatedTokenAddress, getMint } from "@solana/spl-token";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Metadata } from "@metaplex-foundation/js";
-import { getTokenMetadata } from "../utils";
 import useBattleRoyale from "./useBattleRoyale";
 import useProvider from "./useProvider";
 import useUserNfts from "./useUserNfts";
@@ -76,18 +76,15 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
 
       setBattleground({
         ...state,
-        potValue:
-          new anchor.BN(potAccount.amount.toString()).toNumber() / new anchor.BN(10 ** mint.decimals).toNumber(),
-        ticketPrice:
-          new anchor.BN(state.entryFee.toString()).toNumber() / new anchor.BN(10 ** mint.decimals).toNumber(),
+        potValue: formatBN(new anchor.BN(potAccount.amount.toString()), mint.decimals),
+        ticketPrice: formatBN(state.entryFee, mint.decimals),
         publicKey: battlegroundAddress,
       } as any);
     } catch (e) {
       setBattleground({
         ...state,
         potValue: 0,
-        ticketPrice:
-          new anchor.BN(state.entryFee.toString()).toNumber() / new anchor.BN(10 ** mint.decimals).toNumber(),
+        ticketPrice: formatBN(state.entryFee, mint.decimals),
         publicKey: battlegroundAddress,
       } as any);
     }

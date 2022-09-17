@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+import { BattlegroundAccount, ProgramMethodCallbacks } from "../../hooks/useBattleground";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { getAccount, getAssociatedTokenAddress, getMint } from "@solana/spl-token";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 
+import { BN } from "@project-serum/anchor";
 import { Metadata } from "@metaplex-foundation/js";
-import { ProgramMethodCallbacks } from "../../hooks/useBattleground";
+import { formatBN } from "../../utils";
 import toast from "react-hot-toast";
 import useBattleRoyale from "../../hooks/useBattleRoyale";
 import useMetadata from "../../hooks/useMetadata";
+import useProvider from "../../hooks/useProvider";
 
 export default function PreparingParticipantCard({
   token,
+  battleground,
   joinBattleground,
 }: {
   token: Metadata;
+  battleground: BattlegroundAccount;
   joinBattleground: (
     token: Metadata,
     attack: number,
@@ -23,7 +30,9 @@ export default function PreparingParticipantCard({
   const [characteristics, setCharacteristics] = useState<number>(50);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isInflight, setIsInflight] = useState<boolean>(false);
+  const [cost, setCosts] = useState<React.ReactNode>();
 
+  const provider = useProvider();
   const { battleRoyale } = useBattleRoyale();
   const metadata = useMetadata(token.mintAddress);
 
@@ -41,6 +50,26 @@ export default function PreparingParticipantCard({
     setIsOpen(false);
     setIsInflight(false);
   };
+
+  const fetchCost = useCallback(async () => {
+    if (!provider) return;
+    const mint = await getMint(provider.connection, battleground.potMint);
+    const account = await getAccount(
+      provider.connection,
+      await getAssociatedTokenAddress(battleground.potMint, provider.publicKey)
+    );
+
+    setCosts(
+      <div>
+        It will cost you {formatBN(battleground.entryFee, mint.decimals)} of your{" "}
+        {formatBN(new BN(account.amount.toString()), mint.decimals)} tokens
+      </div>
+    );
+  }, [provider?.publicKey, battleground]);
+
+  useEffect(() => {
+    fetchCost();
+  }, [fetchCost]);
 
   return (
     <div className="rounded-2xl border-2 w-48 m-5">
@@ -79,6 +108,7 @@ export default function PreparingParticipantCard({
                 </div>
               </div>
               <div>{(battleRoyale?.fee || 0) / 100}% of the ticket goes fund developments</div>
+              {cost && cost}
               <button className={`btn btn-success ${isInflight ? "loading" : ""}`} onClick={() => handleSendToBattle()}>
                 Buy ticket
               </button>

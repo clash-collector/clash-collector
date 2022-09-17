@@ -23,6 +23,7 @@ export default function CreateBattlegroundModal({ collection, isOpen, onClose }:
   const { names } = useTokens();
 
   const [query, setQuery] = useState<string>("");
+  const [inflight, setInflight] = useState(false);
   const [ticketToken, setTicketToken] = useState<string>();
   const [ticketCost, setTicketCost] = useState<number>();
   const [participantsCap, setParticipantsCap] = useState<number>();
@@ -50,19 +51,14 @@ export default function CreateBattlegroundModal({ collection, isOpen, onClose }:
     )
       return;
 
+    setInflight(true);
     const tokenKey = new PublicKey(ticketToken);
     // Fetch the mint to get the decimals
-    const mint = await getMint(provider.connection, tokenKey);
 
-    await createBattleground(
-      collection,
-      tokenKey,
-      (ticketCost || 0) * 10 ** mint.decimals,
-      creator,
-      creatorFee,
-      participantsCap,
-      pointsPerDay
-    );
+    await createBattleground(collection, tokenKey, ticketCost || 0, creator, creatorFee, participantsCap, pointsPerDay);
+    setInflight(false);
+
+    onClose();
   };
 
   return (
@@ -173,7 +169,10 @@ export default function CreateBattlegroundModal({ collection, isOpen, onClose }:
             </div>
           )}
           <div>
-            <button className="btn btn-primary w-full mt-2" onClick={() => handleCreateBattleground()}>
+            <button
+              className={`btn btn-primary w-full mt-2 ${inflight ? "btn-loading btn-disabled" : ""}`}
+              onClick={() => handleCreateBattleground()}
+            >
               Create
             </button>
           </div>

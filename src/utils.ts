@@ -1,7 +1,9 @@
 import * as anchor from "@project-serum/anchor";
-import { PROGRAM_ID as METADATA_PROGRAM_ID } from "@metaplex-foundation/mpl-token-metadata";
+
 import { BattlegroundAccount, ParticipantAccount } from "./hooks/useBattleground";
+
 import { CollectionInfo } from "./constants/collections";
+import { PROGRAM_ID as METADATA_PROGRAM_ID } from "@metaplex-foundation/mpl-token-metadata";
 import { Metadata } from "@metaplex-foundation/js";
 
 export function shortAddress(address?: anchor.web3.PublicKey | string) {
@@ -14,6 +16,15 @@ export function shortAddress(address?: anchor.web3.PublicKey | string) {
     result = address;
   }
   return result.slice(0, 4) + "..." + result.slice(result.length - 4, result.length);
+}
+
+export function formatBN(n: anchor.BN, decimals: number) {
+  let array = n.toString().split("");
+  array = Array(Math.max(0, decimals - array.length + 1))
+    .fill("0")
+    .concat(array);
+  array.splice(array.length - decimals, 0, ".");
+  return Number(array.join(""));
 }
 
 export const getTokenMetadata = (tokenMint: anchor.web3.PublicKey) => {

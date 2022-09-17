@@ -51,10 +51,16 @@ export default function Participant() {
           <div className="mt-5">
             <span className="text-xl font-bold">Targets</span>
             <hr />
-            <div className="mt-10 flex flex-row flex-wrap gap-5">
+            <div className="mt-10 flex flex-row flex-wrap gap-5 justify-center">
               {battleground &&
                 participants?.map((e) => (
-                  <TargetCard source={participant} target={e} battleground={battleground} action={participantAction} />
+                  <TargetCard
+                    key={e.publicKey.toString()}
+                    source={participant}
+                    target={e}
+                    battleground={battleground}
+                    action={participantAction}
+                  />
                 ))}
             </div>
           </div>

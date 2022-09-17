@@ -1,13 +1,13 @@
-import React, { useState } from "react";
-import toast from "react-hot-toast";
 import { BattlegroundAccount, ParticipantAccount, ProgramMethodCallbacks } from "../../hooks/useBattleground";
-import useMetadata from "../../hooks/useMetadata";
-import { ActionType } from "../../hooks/useParticipant";
-import useUserNfts from "../../hooks/useUserNfts";
+import React, { useState } from "react";
 import { shortAddress, spendableActionPoints } from "../../utils";
 
-import skullSvg from "../../assets/skull.svg";
+import { ActionType } from "../../hooks/useParticipant";
 import ParticipantStatistics from "../../components/ParticipantStatistics";
+import skullSvg from "../../assets/skull.svg";
+import toast from "react-hot-toast";
+import useMetadata from "../../hooks/useMetadata";
+import useUserNfts from "../../hooks/useUserNfts";
 
 export default function TargetCard({
   source,
@@ -122,12 +122,12 @@ export default function TargetCard({
             <input
               type="range"
               min="0"
-              max={pointsLeft}
+              max={Math.min(Math.ceil(target.healthPoints / source.attack), pointsLeft)}
               defaultValue="0"
               className="range"
               onChange={(e) => setPointsToSpend(Number(e.target.value))}
             />
-            <span>{pointsLeft}</span>
+            <span>{Math.min(Math.ceil(target.healthPoints / source.attack), pointsLeft)}</span>
           </div>
           <p className="py-4">
             You will{" "}
