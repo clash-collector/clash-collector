@@ -33,7 +33,13 @@ export default function Collection() {
       setCollection(collection);
     } else {
       const key = new PublicKey(collectionQueryString);
-      setCollection(await new Metaplex(connection).nfts().findByMint(key).run());
+      const metadata = await new Metaplex(connection).nfts().findByMint(key).run();
+      setCollection({
+        id: metadata.symbol,
+        name: metadata.name,
+        info: { v2: { collectionMint: key } },
+        profile: metadata.json.image,
+      });
     }
   };
 

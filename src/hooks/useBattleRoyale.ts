@@ -43,6 +43,7 @@ export default function useBattleRoyale() {
   const fetchBattlegroundsByCollection = useCallback(
     async (collection: Collection): Promise<BattlegroundAccount[] | undefined> => {
       if (!program) return;
+      console.log(collection);
 
       const filters = collection.info.v2
         ? [{ memcmp: { offset: 20, bytes: collection.info.v2.collectionMint.toString() } }]

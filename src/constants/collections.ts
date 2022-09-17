@@ -29,7 +29,7 @@ export const testCollections: Collection[] = [
     name: "Sol Patrol",
     info: {
       v2: {
-        collectionMint: new anchor.web3.PublicKey("4mEg5HLU1fnHYpWoni6GFyzAxgibwHFBZm9t7sptZRai"),
+        collectionMint: new anchor.web3.PublicKey("J267H7Wed7zB6jvNUq2W6pyasY1QZZELUmWAM44itL2R"),
       },
     },
     website: "https://www.solpatrol.io/",
