@@ -1,5 +1,5 @@
-import React from "react";
 import { PublicKey } from "@solana/web3.js";
+import React from "react";
 import TokenIcon from "./TokenIcon";
 
 interface TokenAmountProps {

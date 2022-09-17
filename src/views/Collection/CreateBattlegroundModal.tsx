@@ -1,13 +1,15 @@
-import { getMint } from "@solana/spl-token";
-import { PublicKey } from "@solana/web3.js";
 import React, { useState } from "react";
-import TokenIcon from "../../components/TokenIcon";
+
+import { BATTLE_ROYALE_PROGRAM_ID } from "../../programs/battleRoyale";
 import { Collection } from "../../constants/collections";
+import { PublicKey } from "@solana/web3.js";
+import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
+import TokenIcon from "../../components/TokenIcon";
+import { getMint } from "@solana/spl-token";
+import { shortAddress } from "../../utils";
 import useBattleRoyale from "../../hooks/useBattleRoyale";
 import useProvider from "../../hooks/useProvider";
 import useTokens from "../../hooks/useTokens";
-import { BATTLE_ROYALE_PROGRAM_ID } from "../../programs/battleRoyale";
-import { shortAddress } from "../../utils";
 
 interface CreateBattlegroundModalProps {
   collection: Collection;
@@ -17,7 +19,7 @@ interface CreateBattlegroundModalProps {
 
 export default function CreateBattlegroundModal({ collection, isOpen, onClose }: CreateBattlegroundModalProps) {
   const provider = useProvider();
-  const { createBattleground } = useBattleRoyale();
+  const { battleRoyale, createBattleground } = useBattleRoyale();
   const { names } = useTokens();
 
   const [query, setQuery] = useState<string>("");
@@ -25,6 +27,8 @@ export default function CreateBattlegroundModal({ collection, isOpen, onClose }:
   const [ticketCost, setTicketCost] = useState<number>();
   const [participantsCap, setParticipantsCap] = useState<number>();
   const [pointsPerDay, setPointsPerDay] = useState<number>();
+  const [creator, setCreator] = useState<PublicKey>();
+  const [creatorFee, setCreatorFee] = useState<number>();
 
   const filteredTokenNames = names
     ? query === ""
@@ -35,7 +39,16 @@ export default function CreateBattlegroundModal({ collection, isOpen, onClose }:
     : [];
 
   const handleCreateBattleground = async () => {
-    if (!provider || !collection || !ticketToken || !participantsCap || !pointsPerDay) return;
+    if (
+      !provider ||
+      !collection ||
+      !ticketToken ||
+      !participantsCap ||
+      !pointsPerDay ||
+      !creator ||
+      creatorFee === undefined
+    )
+      return;
 
     const tokenKey = new PublicKey(ticketToken);
     // Fetch the mint to get the decimals
@@ -45,6 +58,8 @@ export default function CreateBattlegroundModal({ collection, isOpen, onClose }:
       collection,
       tokenKey,
       (ticketCost || 0) * 10 ** mint.decimals,
+      creator,
+      creatorFee,
       participantsCap,
       pointsPerDay
     );
@@ -123,6 +138,34 @@ export default function CreateBattlegroundModal({ collection, isOpen, onClose }:
               onChange={(e) => setPointsPerDay(Number(e.target.value))}
             />
           </div>
+          <div className="w-100 justify-start">
+            <div className="flex flex-row w-100">
+              <div className="w-fit font-bold">Creator address</div>
+              <div className="tooltip" data-tip="This address will earn a fee for each ticket sold">
+                <QuestionMarkCircleIcon className="w-5 h-5" />
+              </div>
+            </div>
+            <input
+              placeholder={battleRoyale?.gameMaster.toString()}
+              className="input input-bordered w-full"
+              onChange={(e) => {
+                try {
+                  setCreator(new PublicKey(e.target.value));
+                } catch (err) {}
+              }}
+            />
+          </div>
+          <div className="w-100 justify-start">
+            <span className="w-min font-bold">Creator fee (%)</span>
+            <input
+              type="number"
+              min={0}
+              max={99}
+              placeholder="1"
+              className="input input-bordered w-full"
+              onChange={(e) => setCreatorFee(Number(e.target.value) * 100)}
+            />
+          </div>
           {pointsPerDay && participantsCap && (
             <div>
               It will take approximately between {(1250 / 150 / pointsPerDay).toFixed(1)} days and{" "}
@@ -130,7 +173,7 @@ export default function CreateBattlegroundModal({ collection, isOpen, onClose }:
             </div>
           )}
           <div>
-            <button className="btn btn-primary w-full" onClick={() => handleCreateBattleground()}>
+            <button className="btn btn-primary w-full mt-2" onClick={() => handleCreateBattleground()}>
               Create
             </button>
           </div>

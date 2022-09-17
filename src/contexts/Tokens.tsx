@@ -18,8 +18,6 @@ export const TokensProvider = ({ children }: { children: React.ReactNode }) => {
   const [tokenMap, setTokenMap] = useState<Map<string, TokenInfo>>(new Map());
   const [tokenNames, setTokenNames] = useState<Map<string, string>>(new Map());
 
-  console.log(slug);
-
   useEffect(() => {
     new TokenListProvider().resolve().then((tokens) => {
       const tokenList = tokens.filterByClusterSlug(slug).getList();

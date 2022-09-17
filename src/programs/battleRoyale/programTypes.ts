@@ -51,6 +51,10 @@ export type BattleRoyaleProgram = {
           type: "publicKey";
         },
         {
+          name: "devFund";
+          type: "publicKey";
+        },
+        {
           name: "fee";
           type: "u16";
         }
@@ -66,7 +70,7 @@ export type BattleRoyaleProgram = {
           docs: ["The signer that will create the battleground"];
         },
         {
-          name: "battleRoyaleState";
+          name: "battleRoyale";
           isMut: true;
           isSigner: false;
           docs: ["The Battle Royale State"];
@@ -96,13 +100,13 @@ export type BattleRoyaleProgram = {
                 kind: "account";
                 type: "u64";
                 account: "BattleRoyaleState";
-                path: "battle_royale_state.last_battleground_id";
+                path: "battle_royale.last_battleground_id";
               }
             ];
           };
         },
         {
-          name: "battlegroundState";
+          name: "battleground";
           isMut: true;
           isSigner: false;
           docs: ["The battleground on which participants will play"];
@@ -117,7 +121,7 @@ export type BattleRoyaleProgram = {
                 kind: "account";
                 type: "u64";
                 account: "BattleRoyaleState";
-                path: "battle_royale_state.last_battleground_id";
+                path: "battle_royale.last_battleground_id";
               }
             ];
           };
@@ -156,6 +160,14 @@ export type BattleRoyaleProgram = {
           type: "u64";
         },
         {
+          name: "creator";
+          type: "publicKey";
+        },
+        {
+          name: "creatorFee";
+          type: "u16";
+        },
+        {
           name: "actionPointsPerDay";
           type: "u32";
         },
@@ -178,7 +190,7 @@ export type BattleRoyaleProgram = {
           isSigner: true;
         },
         {
-          name: "gameMaster";
+          name: "devFund";
           isMut: true;
           isSigner: false;
         },
@@ -216,6 +228,12 @@ export type BattleRoyaleProgram = {
               }
             ];
           };
+        },
+        {
+          name: "creator";
+          isMut: true;
+          isSigner: false;
+          docs: ["Creator of the battlegrounf that owns the creator fee"];
         },
         {
           name: "battleground";
@@ -294,6 +312,11 @@ export type BattleRoyaleProgram = {
         },
         {
           name: "devAccount";
+          isMut: true;
+          isSigner: false;
+        },
+        {
+          name: "creatorAccount";
           isMut: true;
           isSigner: false;
         },
@@ -766,6 +789,10 @@ export type BattleRoyaleProgram = {
             type: "publicKey";
           },
           {
+            name: "devFund";
+            type: "publicKey";
+          },
+          {
             name: "fee";
             type: "u16";
           },
@@ -824,6 +851,14 @@ export type BattleRoyaleProgram = {
           {
             name: "entryFee";
             type: "u64";
+          },
+          {
+            name: "creator";
+            type: "publicKey";
+          },
+          {
+            name: "creatorFee";
+            type: "u16";
           },
           {
             name: "lastWinner";
@@ -1071,31 +1106,36 @@ export type BattleRoyaleProgram = {
   errors: [
     {
       code: 6000;
+      name: "InvalidParameter";
+      msg: "Invalid parameter";
+    },
+    {
+      code: 6001;
       name: "InvalidStatistics";
       msg: "Invalid statistics";
     },
     {
-      code: 6001;
+      code: 6002;
       name: "CollectionSymbolInvalid";
       msg: "Invalid collection symbol";
     },
     {
-      code: 6002;
+      code: 6003;
       name: "VerifiedCreatorsInvalid";
       msg: "Invalid provided creators";
     },
     {
-      code: 6003;
+      code: 6004;
       name: "CollectionVerificationFailed";
       msg: "Failed collection verification";
     },
     {
-      code: 6004;
+      code: 6005;
       name: "InsufficientActionPoints";
       msg: "Not enough action points";
     },
     {
-      code: 6005;
+      code: 6006;
       name: "WrongBattlegroundStatus";
       msg: "Wrong battleground status";
     }
@@ -1155,6 +1195,10 @@ export const IDL: BattleRoyaleProgram = {
           type: "publicKey",
         },
         {
+          name: "devFund",
+          type: "publicKey",
+        },
+        {
           name: "fee",
           type: "u16",
         },
@@ -1170,7 +1214,7 @@ export const IDL: BattleRoyaleProgram = {
           docs: ["The signer that will create the battleground"],
         },
         {
-          name: "battleRoyaleState",
+          name: "battleRoyale",
           isMut: true,
           isSigner: false,
           docs: ["The Battle Royale State"],
@@ -1200,13 +1244,13 @@ export const IDL: BattleRoyaleProgram = {
                 kind: "account",
                 type: "u64",
                 account: "BattleRoyaleState",
-                path: "battle_royale_state.last_battleground_id",
+                path: "battle_royale.last_battleground_id",
               },
             ],
           },
         },
         {
-          name: "battlegroundState",
+          name: "battleground",
           isMut: true,
           isSigner: false,
           docs: ["The battleground on which participants will play"],
@@ -1221,7 +1265,7 @@ export const IDL: BattleRoyaleProgram = {
                 kind: "account",
                 type: "u64",
                 account: "BattleRoyaleState",
-                path: "battle_royale_state.last_battleground_id",
+                path: "battle_royale.last_battleground_id",
               },
             ],
           },
@@ -1260,6 +1304,14 @@ export const IDL: BattleRoyaleProgram = {
           type: "u64",
         },
         {
+          name: "creator",
+          type: "publicKey",
+        },
+        {
+          name: "creatorFee",
+          type: "u16",
+        },
+        {
           name: "actionPointsPerDay",
           type: "u32",
         },
@@ -1282,7 +1334,7 @@ export const IDL: BattleRoyaleProgram = {
           isSigner: true,
         },
         {
-          name: "gameMaster",
+          name: "devFund",
           isMut: true,
           isSigner: false,
         },
@@ -1320,6 +1372,12 @@ export const IDL: BattleRoyaleProgram = {
               },
             ],
           },
+        },
+        {
+          name: "creator",
+          isMut: true,
+          isSigner: false,
+          docs: ["Creator of the battlegrounf that owns the creator fee"],
         },
         {
           name: "battleground",
@@ -1398,6 +1456,11 @@ export const IDL: BattleRoyaleProgram = {
         },
         {
           name: "devAccount",
+          isMut: true,
+          isSigner: false,
+        },
+        {
+          name: "creatorAccount",
           isMut: true,
           isSigner: false,
         },
@@ -1870,6 +1933,10 @@ export const IDL: BattleRoyaleProgram = {
             type: "publicKey",
           },
           {
+            name: "devFund",
+            type: "publicKey",
+          },
+          {
             name: "fee",
             type: "u16",
           },
@@ -1928,6 +1995,14 @@ export const IDL: BattleRoyaleProgram = {
           {
             name: "entryFee",
             type: "u64",
+          },
+          {
+            name: "creator",
+            type: "publicKey",
+          },
+          {
+            name: "creatorFee",
+            type: "u16",
           },
           {
             name: "lastWinner",
@@ -2175,31 +2250,36 @@ export const IDL: BattleRoyaleProgram = {
   errors: [
     {
       code: 6000,
+      name: "InvalidParameter",
+      msg: "Invalid parameter",
+    },
+    {
+      code: 6001,
       name: "InvalidStatistics",
       msg: "Invalid statistics",
     },
     {
-      code: 6001,
+      code: 6002,
       name: "CollectionSymbolInvalid",
       msg: "Invalid collection symbol",
     },
     {
-      code: 6002,
+      code: 6003,
       name: "VerifiedCreatorsInvalid",
       msg: "Invalid provided creators",
     },
     {
-      code: 6003,
+      code: 6004,
       name: "CollectionVerificationFailed",
       msg: "Failed collection verification",
     },
     {
-      code: 6004,
+      code: 6005,
       name: "InsufficientActionPoints",
       msg: "Not enough action points",
     },
     {
-      code: 6005,
+      code: 6006,
       name: "WrongBattlegroundStatus",
       msg: "Wrong battleground status",
     },

@@ -23,8 +23,6 @@ export default function Collection() {
   const collections = useCollections();
   const [collection, setCollection] = useState<Collection>();
 
-  console.log(collection, collectionQueryString);
-
   const fetchCollection = async () => {
     if (!collectionQueryString) return;
 
@@ -48,18 +46,19 @@ export default function Collection() {
   }, [collectionQueryString, collections]);
 
   const provider = useProvider();
-  const { gameMaster, fetchBattlegroundsByCollection } = useBattleRoyale();
+  const { gameMaster, battleRoyale, fetchBattlegroundsByCollection } = useBattleRoyale();
   const [battlegrounds, setBattlegrounds] = useState<BattlegroundAccount[]>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const fetch = async () => {
     if (!collection) return;
+    console.log(collection, await fetchBattlegroundsByCollection(collection));
     setBattlegrounds(await fetchBattlegroundsByCollection(collection));
   };
 
   useEffect(() => {
     fetch();
-  }, [collection, provider?.publicKey]);
+  }, [collection, provider?.publicKey, battleRoyale]);
 
   return (
     <View>

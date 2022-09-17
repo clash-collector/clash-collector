@@ -51,6 +51,10 @@
           "type": "publicKey"
         },
         {
+          "name": "devFund",
+          "type": "publicKey"
+        },
+        {
           "name": "fee",
           "type": "u16"
         }
@@ -68,7 +72,7 @@
           ]
         },
         {
-          "name": "battleRoyaleState",
+          "name": "battleRoyale",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -102,13 +106,13 @@
                 "kind": "account",
                 "type": "u64",
                 "account": "BattleRoyaleState",
-                "path": "battle_royale_state.last_battleground_id"
+                "path": "battle_royale.last_battleground_id"
               }
             ]
           }
         },
         {
-          "name": "battlegroundState",
+          "name": "battleground",
           "isMut": true,
           "isSigner": false,
           "docs": [
@@ -125,7 +129,7 @@
                 "kind": "account",
                 "type": "u64",
                 "account": "BattleRoyaleState",
-                "path": "battle_royale_state.last_battleground_id"
+                "path": "battle_royale.last_battleground_id"
               }
             ]
           }
@@ -168,6 +172,14 @@
           "type": "u64"
         },
         {
+          "name": "creator",
+          "type": "publicKey"
+        },
+        {
+          "name": "creatorFee",
+          "type": "u16"
+        },
+        {
           "name": "actionPointsPerDay",
           "type": "u32"
         },
@@ -193,7 +205,7 @@
           "isSigner": true
         },
         {
-          "name": "gameMaster",
+          "name": "devFund",
           "isMut": true,
           "isSigner": false
         },
@@ -233,6 +245,14 @@
               }
             ]
           }
+        },
+        {
+          "name": "creator",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Creator of the battlegrounf that owns the creator fee"
+          ]
         },
         {
           "name": "battleground",
@@ -319,6 +339,11 @@
         },
         {
           "name": "devAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "creatorAccount",
           "isMut": true,
           "isSigner": false
         },
@@ -811,6 +836,10 @@
             "type": "publicKey"
           },
           {
+            "name": "devFund",
+            "type": "publicKey"
+          },
+          {
             "name": "fee",
             "type": "u16"
           },
@@ -869,6 +898,14 @@
           {
             "name": "entryFee",
             "type": "u64"
+          },
+          {
+            "name": "creator",
+            "type": "publicKey"
+          },
+          {
+            "name": "creatorFee",
+            "type": "u16"
           },
           {
             "name": "lastWinner",
@@ -1122,31 +1159,36 @@
   "errors": [
     {
       "code": 6000,
+      "name": "InvalidParameter",
+      "msg": "Invalid parameter"
+    },
+    {
+      "code": 6001,
       "name": "InvalidStatistics",
       "msg": "Invalid statistics"
     },
     {
-      "code": 6001,
+      "code": 6002,
       "name": "CollectionSymbolInvalid",
       "msg": "Invalid collection symbol"
     },
     {
-      "code": 6002,
+      "code": 6003,
       "name": "VerifiedCreatorsInvalid",
       "msg": "Invalid provided creators"
     },
     {
-      "code": 6003,
+      "code": 6004,
       "name": "CollectionVerificationFailed",
       "msg": "Failed collection verification"
     },
     {
-      "code": 6004,
+      "code": 6005,
       "name": "InsufficientActionPoints",
       "msg": "Not enough action points"
     },
     {
-      "code": 6005,
+      "code": 6006,
       "name": "WrongBattlegroundStatus",
       "msg": "Wrong battleground status"
     }

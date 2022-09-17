@@ -1,5 +1,4 @@
-import { Metadata, Metaplex } from "@metaplex-foundation/js";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 
 import { APP_NAME } from "../../constants";
 import CollectionCard from "./CollectionCard";
@@ -9,7 +8,6 @@ import { PublicKey } from "@solana/web3.js";
 import View from "../../components/View";
 import logo from "../../assets/logo.svg";
 import useCollections from "../../hooks/useCollections";
-import { useConnection } from "@solana/wallet-adapter-react";
 import useRisk from "../../hooks/useRisk";
 
 export default function Collections() {

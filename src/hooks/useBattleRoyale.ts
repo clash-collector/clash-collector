@@ -42,8 +42,7 @@ export default function useBattleRoyale() {
 
   const fetchBattlegroundsByCollection = useCallback(
     async (collection: Collection): Promise<BattlegroundAccount[] | undefined> => {
-      if (!program) return;
-      console.log(collection);
+      if (!program || !battleRoyale) return;
 
       const filters = collection.info.v2
         ? [{ memcmp: { offset: 20, bytes: collection.info.v2.collectionMint.toString() } }]
@@ -55,7 +54,7 @@ export default function useBattleRoyale() {
           await program.account.battlegroundState.all()
         ).map(async (e) => {
           const mint = await getMint(program.provider.connection, e.account.potMint);
-          let potValue;
+          let potValue: number;
           try {
             const [authorityAddress] = PublicKey.findProgramAddressSync(
               [BATTLEGROUND_AUTHORITY_SEEDS, e.account.id.toArrayLike(Buffer, "le", 8)],
@@ -67,10 +66,11 @@ export default function useBattleRoyale() {
             );
             potValue = new BN(tokenAccount.amount.toString()).toNumber() / new BN(10 ** mint.decimals).toNumber();
           } catch (err) {
-            potValue = new BN(0);
+            potValue = new BN(0).toNumber();
           }
           return {
             ...e.account,
+            totalFee: e.account.creatorFee + battleRoyale.fee,
             publicKey: e.publicKey,
             potValue,
             ticketPrice: new BN(e.account.entryFee.toString()).toNumber() / new BN(10 ** mint.decimals).toNumber(),
@@ -89,7 +89,7 @@ export default function useBattleRoyale() {
         }
       });
     },
-    [program]
+    [program, battleRoyale]
   );
 
   const createBattleground = useCallback(
@@ -97,6 +97,8 @@ export default function useBattleRoyale() {
       collection: Collection,
       ticketToken: PublicKey,
       ticketCost: number,
+      creator: PublicKey,
+      creatorFee: number,
       participantsCap: number,
       pointsPerDay: number,
       holderWhitelistProof: number[][] | null = null
@@ -110,12 +112,14 @@ export default function useBattleRoyale() {
           collection.info as any,
           participantsCap,
           new BN(ticketCost * 10 ** mint.decimals),
+          creator,
+          creatorFee,
           pointsPerDay,
           holderWhitelistProof
         )
         .accounts({
           signer: program.provider.publicKey,
-          battleRoyaleState: battleRoyale?.publicKey,
+          battleRoyale: battleRoyale?.publicKey,
           potMint: ticketToken,
         })
         .rpc();

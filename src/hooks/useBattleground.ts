@@ -24,6 +24,7 @@ export interface BattlegroundAccount extends BaseBattlegroundAccount {
   publicKey: PublicKey;
   potValue: number;
   ticketPrice: number;
+  totalFee: number;
 }
 export declare type BaseParticipantAccount = IdlAccounts<BattleRoyaleProgram>["participantState"];
 export interface ParticipantAccount extends BaseParticipantAccount {
@@ -146,6 +147,7 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
       );
       const potAccount = await getAssociatedTokenAddress(battleground.potMint, authorityAddress, true);
       const devAccount = await getAssociatedTokenAddress(battleground.potMint, gameMaster, true);
+      const creatorAccount = await getAssociatedTokenAddress(battleground.potMint, battleground.creator, true);
       const playerAccount = await getAssociatedTokenAddress(battleground.potMint, provider.publicKey, true);
       const playerNftTokenAccount = await getAssociatedTokenAddress(token.mintAddress, provider.publicKey, true);
       const tokenMetadata = getTokenMetadata(token.mintAddress);
@@ -155,16 +157,18 @@ export default function useBattleground({ id, publicKey }: { id?: number; public
           .joinBattleground(attack, defense, collectionWhitelistProof, holderWhitelistProof)
           .accounts({
             signer: program.provider.publicKey,
-            gameMaster,
+            devFund: gameMaster,
             battleRoyale: battleRoyale?.publicKey,
             authority: authorityAddress,
             battleground: battlegroundAddress,
+            creator: battleground.creator,
             participant: participantAddress,
             potMint: battleground.potMint,
             nftMint: token.mintAddress,
             nftMetadata: tokenMetadata,
             potAccount,
             devAccount,
+            creatorAccount,
             playerAccount,
             playerNftTokenAccount,
           })
