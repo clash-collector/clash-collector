@@ -33,6 +33,9 @@ export default function Home() {
             <li className="step">The pot created from ticket sales goes to the winner</li>
           </ul>
         </div>
+        <Link to={"/collections"} className="mx-auto">
+          <div className="btn btn-lg btn-primary">START</div>
+        </Link>
       </div>
     </View>
   );

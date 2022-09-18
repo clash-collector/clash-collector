@@ -79,10 +79,21 @@ export default function useBattleRoyale() {
         })
       )) as any;
 
+      console.log(
+        accounts.filter((e: any) => {
+          if (e.collectionInfo.v2) {
+            return e.collectionInfo.v2.collectionMint.toString() === collection.info.v2?.collectionMint.toString();
+          } else if (e.collectionInfo.v1) {
+            return e.collectionInfo.v1 === collection.info.v1;
+          }
+        }),
+        accounts.map((e) => e.collectionInfo.v2.collectionMint.toString()),
+        collection.info.v2?.collectionMint.toString()
+      );
+
       // Return filtered accounts
       // TODO: Use fetch filters instead
       return accounts.filter((e: any) => {
-        console.log(e);
         if (e.collectionInfo.v2) {
           return e.collectionInfo.v2.collectionMint.toString() === collection.info.v2?.collectionMint.toString();
         } else if (e.collectionInfo.v1) {
@@ -112,7 +123,7 @@ export default function useBattleRoyale() {
         .createBattleground(
           collection.info as any,
           participantsCap,
-          new BN(ticketCost).mul(new BN(10 ** mint.decimals)),
+          new BN(ticketCost * 10 ** (mint.decimals / 2)).mul(new BN(10 ** mint.decimals)),
           creator,
           creatorFee,
           pointsPerDay,

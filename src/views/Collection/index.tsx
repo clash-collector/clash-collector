@@ -46,7 +46,7 @@ export default function Collection() {
   }, [collectionQueryString, collections]);
 
   const provider = useProvider();
-  const { gameMaster, battleRoyale, fetchBattlegroundsByCollection } = useBattleRoyale();
+  const { battleRoyale, fetchBattlegroundsByCollection } = useBattleRoyale();
   const [battlegrounds, setBattlegrounds] = useState<BattlegroundAccount[]>();
   const [isOpen, setIsOpen] = useState<boolean>(false);
 

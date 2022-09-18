@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
 import { BATTLE_ROYALE_PROGRAM_ID } from "../../programs/battleRoyale";
+import { BN } from "bn.js";
 import { Collection } from "../../constants/collections";
 import { PublicKey } from "@solana/web3.js";
 import { QuestionMarkCircleIcon } from "@heroicons/react/outline";
 import TokenIcon from "../../components/TokenIcon";
-import { getMint } from "@solana/spl-token";
 import { shortAddress } from "../../utils";
 import useBattleRoyale from "../../hooks/useBattleRoyale";
 import useProvider from "../../hooks/useProvider";

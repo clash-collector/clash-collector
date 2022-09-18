@@ -18,6 +18,7 @@ export interface Collection {
   profile?: string;
   cover?: string;
   website?: string;
+  buyLink?: string;
 }
 
 export const localCollections: Collection[] = [
@@ -59,8 +60,22 @@ export const mainnetCollections: Collection[] = [
         collectionMint: new anchor.web3.PublicKey("318p2nhXSiKSPhsQhCtBL1fXNgjUUGPAXG5dbQqSCEpw"),
       },
     },
-    website: "https://goatswap.xyz/collection/318p2nhXSiKSPhsQhCtBL1fXNgjUUGPAXG5dbQqSCEpw",
+    buyLink: "https://goatswap.xyz/collection/318p2nhXSiKSPhsQhCtBL1fXNgjUUGPAXG5dbQqSCEpw",
+    website: "https://twitter.com/DippiesDust",
     profile:
       "https://vx72idvq3z6ayz3nriyicqsd62z63zn2r2s6l2tcjdsaxr24ghvq.arweave.net/rf-kDrDefAxnbYowgUJD9rPt5bqOpeXqYkjkC8dcMes",
+  },
+  {
+    id: "sentries",
+    name: "Sentries",
+    info: {
+      v2: {
+        collectionMint: new anchor.web3.PublicKey("5cRT4CbQDaKzPhNuAgxFa43Zzqxv7WGPV2FHWg8VMbUw"),
+      },
+    },
+    buyLink: "https://goatswap.xyz/collection/5cRT4CbQDaKzPhNuAgxFa43Zzqxv7WGPV2FHWg8VMbUw",
+    website: "https://www.sentries.io/",
+    profile:
+      "https://gslr5376rndgxgjgocu4bblovuejjigtii4zq2jmkse7d5czd2ha.arweave.net/NJce7_6LRmuZJnCpwIVurQiUoNNCOZhpLFSJ8fRZHo4",
   },
 ];

@@ -84,12 +84,32 @@ export default function Documentation() {
         title="Clash Collector's Documentation"
       />
       <div className="mt-10">
-        <span className="text-3xl">FAQ</span>
-        <hr />
-        <div className="grid grid-cols-3 grid-rows-2 gap-2 p-2">
-          {questions.map((e) => (
-            <Question {...e} />
-          ))}
+        <div className="my-5 justify-center">
+          <span className="text-3xl">Links</span>
+          <hr />
+          <div className="flex flex-col p-3 justify-center">
+            <ul className="mx-auto flex flex-col gap-3">
+              <li className="mx-auto">
+                <a className="btn" href="https://discord.gg/tBYdxGHrRA">
+                  Discord server
+                </a>
+              </li>
+              <li className="mx-auto">
+                <a className="btn" href="https://github.com/clash-collector">
+                  Github
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div>
+          <span className="text-3xl">FAQ</span>
+          <hr />
+          <div className="grid grid-cols-3 grid-rows-2 gap-2 p-2">
+            {questions.map((e) => (
+              <Question {...e} />
+            ))}
+          </div>
         </div>
       </div>
     </View>
