@@ -15,6 +15,8 @@ export default function Collections() {
   const collections = useCollections();
   const [key, setKey] = useState<PublicKey>();
 
+  console.log(collections);
+
   const handleUpdateAddress = async (e: ChangeEvent<HTMLInputElement>) => {
     try {
       const key = new PublicKey(e.target.value);

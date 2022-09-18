@@ -1,8 +1,5 @@
 import * as anchor from "@project-serum/anchor";
 
-import solPatrolProfile from "../assets/collections/solPatrol/profile.jpg";
-import udderProfile from "../assets/collections/udderChaos/profile.png";
-
 export interface CollectionInfo {
   v1?: {
     verifiedCreators: anchor.web3.PublicKey[];
@@ -23,49 +20,47 @@ export interface Collection {
   website?: string;
 }
 
-export const testCollections: Collection[] = [
+export const localCollections: Collection[] = [
   {
-    id: "sol-patrol",
-    name: "Sol Patrol",
+    id: "dippies",
+    name: "Dippies",
     info: {
       v2: {
-        collectionMint: new anchor.web3.PublicKey("J267H7Wed7zB6jvNUq2W6pyasY1QZZELUmWAM44itL2R"),
+        collectionMint: new anchor.web3.PublicKey("318p2nhXSiKSPhsQhCtBL1fXNgjUUGPAXG5dbQqSCEpw"),
       },
     },
-    website: "https://www.solpatrol.io/",
-    profile: solPatrolProfile,
+    website: "https://goatswap.xyz/collection/318p2nhXSiKSPhsQhCtBL1fXNgjUUGPAXG5dbQqSCEpw",
+    profile:
+      "https://vx72idvq3z6ayz3nriyicqsd62z63zn2r2s6l2tcjdsaxr24ghvq.arweave.net/rf-kDrDefAxnbYowgUJD9rPt5bqOpeXqYkjkC8dcMes",
+  },
+];
+
+export const testnetCollections: Collection[] = [
+  {
+    id: "dippies",
+    name: "Dippies",
+    info: {
+      v2: {
+        collectionMint: new anchor.web3.PublicKey("318p2nhXSiKSPhsQhCtBL1fXNgjUUGPAXG5dbQqSCEpw"),
+      },
+    },
+    website: "https://goatswap.xyz/collection/318p2nhXSiKSPhsQhCtBL1fXNgjUUGPAXG5dbQqSCEpw",
+    profile:
+      "https://vx72idvq3z6ayz3nriyicqsd62z63zn2r2s6l2tcjdsaxr24ghvq.arweave.net/rf-kDrDefAxnbYowgUJD9rPt5bqOpeXqYkjkC8dcMes",
   },
 ];
 
 export const mainnetCollections: Collection[] = [
   {
-    id: "udder-chaos",
-    name: "Udder Chaos",
-    info: {
-      v1: {
-        verifiedCreators: [
-          new anchor.web3.PublicKey("AkUzwmPvYav5Wpi9fC5DUhT3FvY2UpDinNw6ekuAMmSv"),
-          new anchor.web3.PublicKey("6M2vcAdNnFcKCnAzACk6SGRKoQ2Ar1Jg511PS6vxJ2P2"),
-          new anchor.web3.PublicKey("FQ45nCERysBmtbRDWiBo7uTQksLuUSzi6Dk24gro8RHd"),
-          new anchor.web3.PublicKey("8oAHRJZhM9Gwc9vFJqbwxL5dKoYkce4dgtb5yTW4hGyf"),
-          new anchor.web3.PublicKey("7ThGUdgFcyorzQv5BpL5vRWYB6k2wN6zv25s6bPyLdsS"),
-        ],
-        whitelistRoot: [],
-        symbol: "UDDER",
-      },
-    },
-    website: "https://www.udderchaos.io/",
-    profile: udderProfile,
-  },
-  {
-    id: "sol-patrol",
-    name: "Sol Patrol",
+    id: "dippies",
+    name: "Dippies",
     info: {
       v2: {
-        collectionMint: new anchor.web3.PublicKey("7Zcfq1fdQYYjKreRoKSf6ungwrFGCgoPcapEeTkj1cQX"),
+        collectionMint: new anchor.web3.PublicKey("318p2nhXSiKSPhsQhCtBL1fXNgjUUGPAXG5dbQqSCEpw"),
       },
     },
-    website: "https://www.solpatrol.io/",
-    profile: solPatrolProfile,
+    website: "https://goatswap.xyz/collection/318p2nhXSiKSPhsQhCtBL1fXNgjUUGPAXG5dbQqSCEpw",
+    profile:
+      "https://vx72idvq3z6ayz3nriyicqsd62z63zn2r2s6l2tcjdsaxr24ghvq.arweave.net/rf-kDrDefAxnbYowgUJD9rPt5bqOpeXqYkjkC8dcMes",
   },
 ];

@@ -1,13 +1,12 @@
 import { APP_NAME } from "../../constants";
 import Hero from "../../components/Hero";
+import { Link } from "react-router-dom";
 import React from "react";
 import View from "../../components/View";
 import logo from "../../assets/logo.svg";
 import useCollections from "../../hooks/useCollections";
 
 export default function Home() {
-  const collections = useCollections();
-
   return (
     <View>
       <Hero
@@ -21,13 +20,18 @@ export default function Home() {
           </>
         }
       />
-      <div className="mt-10">
-        <span className="text-xl">Available collections</span>
-        <hr />
-        <div className="flex flex-row flex-wrap">
-          {collections.map((collection) => (
-            <div key={collection.id}>{collection.name}</div>
-          ))}
+      <div className="mt-10 flex flex-col justify-center align-center">
+        <div className="flex justify-center text-2xl">How to play?</div>
+        <div className="flex">
+          <ul className="steps steps-vertical mx-auto justify-center">
+            <Link to="/collections">
+              <li className="step">Browse collections</li>
+            </Link>
+            <li className="step">Select the one for which you have a token</li>
+            <li className="step">Join a battleground with a ticket price that fits your criteria.</li>
+            <li className="step">Once full, be the last participant standing in the battleground</li>
+            <li className="step">The pot created from ticket sales goes to the winner</li>
+          </ul>
         </div>
       </div>
     </View>

@@ -71,7 +71,7 @@ export default function Collection() {
         <div className="flex flex-row justify-between">
           <span className="text-xl my-auto">Battlegrounds</span>
           <div>
-            {risk && collection && provider?.publicKey && gameMaster?.equals(provider.publicKey) && (
+            {risk && collection && (
               <>
                 <CreateBattlegroundModal collection={collection} isOpen={isOpen} onClose={() => setIsOpen(false)} />
                 <div className="btn btn-outline m-2" onClick={() => setIsOpen(true)}>

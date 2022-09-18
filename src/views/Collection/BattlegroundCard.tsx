@@ -20,11 +20,11 @@ export default function BattlegroundCard({ battleground }: BattlegroundCardProps
             </div>{" "}
             {battleground.status["preparing"] ? (
               <div className="tooltip" data-tip={"You can still join this battleground"}>
-                Preparation
+                Preparation ({battleground.participants}/{battleground.participantsCap})
               </div>
             ) : (
               <div className="tooltip" data-tip={"Participants are fighting"}>
-                Battle
+                Battle ({battleground.participants}/{battleground.participantsCap})
               </div>
             )}
           </li>

@@ -39,12 +39,12 @@ export default function Settings() {
               </Popover>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-4">
+          {/* <div className="grid grid-cols-4 gap-4">
             <div className="col-span-3 text-start my-auto">Experimental mode</div>
             <div>
               <input type="checkbox" className="toggle" checked={risk} onChange={() => setRisk(!risk)} />
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </View>

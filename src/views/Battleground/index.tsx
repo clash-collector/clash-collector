@@ -54,6 +54,7 @@ export default function Battleground() {
     });
   };
 
+  console.log(battleground);
   return (
     <View>
       <Hero
