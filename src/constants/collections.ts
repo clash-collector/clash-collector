@@ -78,4 +78,17 @@ export const mainnetCollections: Collection[] = [
     profile:
       "https://gslr5376rndgxgjgocu4bblovuejjigtii4zq2jmkse7d5czd2ha.arweave.net/NJce7_6LRmuZJnCpwIVurQiUoNNCOZhpLFSJ8fRZHo4",
   },
+  {
+    id: "sol-patrol",
+    name: "Sol Patrol",
+    info: {
+      v2: {
+        collectionMint: new anchor.web3.PublicKey("7Zcfq1fdQYYjKreRoKSf6ungwrFGCgoPcapEeTkj1cQX"),
+      },
+    },
+    buyLink: "https://goatswap.xyz/collection/7Zcfq1fdQYYjKreRoKSf6ungwrFGCgoPcapEeTkj1cQX",
+    website: "https://solpatrol.io/missions",
+    profile:
+      "https://s3sj7hotjvtlyiss5yshw77q5pyf7wqsjeon433mzu2jx2qqzzbq.arweave.net/luSfndNNZrwiUu4ke3_w6_Bf2hJJHN5vbM00m-oQzkM",
+  },
 ];
