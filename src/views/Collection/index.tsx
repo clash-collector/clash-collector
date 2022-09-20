@@ -85,7 +85,7 @@ export default function Collection() {
           </div>
         </div>
         <hr />
-        <div className="flex flex-row flex-wrap justify-center">
+        <div className="flex flex-row flex-wrap justify-center w-full">
           {battlegrounds ? (
             battlegrounds.map((battleground) => (
               <BattlegroundCard key={battleground.publicKey.toString()} battleground={battleground} />
