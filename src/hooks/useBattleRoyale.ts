@@ -123,7 +123,7 @@ export default function useBattleRoyale() {
         .createBattleground(
           collection.info as any,
           participantsCap,
-          new BN(ticketCost * 10 ** (mint.decimals / 2)).mul(new BN(10 ** mint.decimals)),
+          new BN(ticketCost * 10 ** (mint.decimals / 2)).mul(new BN(10 ** (mint.decimals / 2))),
           creator,
           creatorFee,
           pointsPerDay,
